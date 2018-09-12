@@ -402,12 +402,6 @@ class Project(models.Model):
 
         if self.agile_enabled:
             del action['context']['group_by']
-            action['view_mode'] = 'tree, form, calendar, pivot, graph'
-            views = []
-            for view in action.get('views'):
-                if view[1] == 'kanban':
-                    continue
-                views.append(view)
-            action['views'] = views
+            action['view_mode'] = 'kanban, tree, form, calendar, pivot, graph'
 
         return action
