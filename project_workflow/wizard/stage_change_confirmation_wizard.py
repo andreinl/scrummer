@@ -7,6 +7,8 @@ from odoo import models, fields, api
 class StageChangeConfirmationWizard(models.TransientModel):
     _name = 'wkf.project.task.confirmation'
 
+    _inherit = ['mail.thread']
+
     user_id = fields.Many2one(
         comodel_name='res.users',
         string='Assignee',
