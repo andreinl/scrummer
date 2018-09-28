@@ -7,8 +7,6 @@ from odoo import models, fields, api
 class StageChangeConfirmationWizard(models.TransientModel):
     _name = 'wkf.project.task.confirmation'
 
-    _inherit = ['mail.thread']
-
     user_id = fields.Many2one(
         comodel_name='res.users',
         string='Assignee',
@@ -42,7 +40,7 @@ class StageChangeConfirmationWizard(models.TransientModel):
         self.task_id.write(values)
 
         if self.message:
-            return self.message_post(body=self.message, message_type='comment')
+            return self.task_id.message_post(body=self.message, message_type='comment')
 
         return {'type': 'ir.actions.act_window_close'}
 
