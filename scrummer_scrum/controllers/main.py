@@ -31,8 +31,8 @@ class ScrummerController(main.ScrummerController):
             "/scrummer/web/data/sprint"
             '/<model("project.agile.scrum.sprint"):sprint>/stop',
         ],
-        type="json",
-        auth="user",
+        type='json',
+        auth='user'
     )
     def sprint_stop(self, sprint):
         # Mark sprint as done
@@ -120,9 +120,8 @@ class ScrummerController(main.ScrummerController):
 
         for project in board.project_ids:
             if not project_id or project_id and project_id == project.id:
-                board_data["board"]["projects"][
-                    project.id
-                ] = self.prepare_project(project)
+                board_data["board"]["projects"][project.id] = \
+                    self.prepare_project(project)
 
         active_sprint = request.env.user.team_id.active_sprint_id
         if active_sprint:
@@ -177,7 +176,10 @@ class ScrummerController(main.ScrummerController):
 
     def prepare_user_team(self, team):
         result = super(ScrummerController, self).prepare_user_team(team)
-        result["sprint_ids"] = team.sprint_ids.filtered(
-            lambda x: x.state != "completed"
-        ).ids
+        result.update({
+            "sprint_ids": team.sprint_ids.filtered(
+                lambda x: x.state != "completed"
+            ).ids,
+            "default_sprint_length": int(team.default_sprint_length)
+        })
         return result
