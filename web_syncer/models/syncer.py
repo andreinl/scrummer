@@ -151,7 +151,7 @@ class Base(models.AbstractModel):
             return
 
         def is_fake_one2many(fn):
-            return self._fields[fn].type == 'integer' and fn == 'res_id'
+            return fn == 'res_id' and fn in self._fields and self._fields[fn].type == 'integer'
 
         def is_fake_one2many_for_model(model, rec):
             for field_name in ['res_model', 'model']:
