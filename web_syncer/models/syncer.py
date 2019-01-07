@@ -166,7 +166,8 @@ class Base(models.AbstractModel):
             if x2m_field['type'] == 'one2many':
                 for rec in self:
                     for inverse_name in x2m_field['inverse_name']:
-
+                        if not inverse_name:
+                            continue
                         # Special case for fake one2many field
                         #  (i.e. ir.attachments)
                         if is_fake_one2many(inverse_name):
