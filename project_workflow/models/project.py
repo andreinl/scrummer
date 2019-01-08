@@ -224,7 +224,7 @@ class Task(models.Model):
     @api.multi
     def write(self, vals):
         stage_id = vals.get('stage_id', False)
-        if stage_id:
+        if stage_id and not self.env.context.get('ignore_workflow', False):
             withoutw = self.filtered(lambda k: not k.workflow_id)
             if withoutw:
                 super(Task, withoutw).write(vals)
