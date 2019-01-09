@@ -132,7 +132,11 @@ class ProjectProject(models.Model):
         return values
 
     def get_next_task_key(self):
-        return self.sudo().task_key_sequence_id.next_by_id()
+        key = self.sudo().task_key_sequence_id.next_by_id()
+        tasks = self.env['project.task'].search([('key', '=', key)])
+        if not tasks:
+            return key
+        return self.get_next_task_key()
 
     def generate_project_key(self, text):
         if not text:
