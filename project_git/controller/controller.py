@@ -343,7 +343,7 @@ class GitController(http.Controller):
                 ('email', '=', commit_author_data.get("email", ''))
             ], limit=1)
             if author_user:
-                commit_author["user_id"] = author_user.id
+                commit_author_data["user_id"] = author_user.id
 
             if commit_author:
                 commit_author.write(commit_author_data)
