@@ -217,23 +217,23 @@ class GitController(http.Controller):
             repository_data = payload['repository']
 
             repository_owner_data = repository_data.pop("owner")
+            if repository_owner_data:
+                if 'email' in repository_owner_data:
+                    repository_owner_user = ResUser.search(
+                        [("email", "=", repository_owner_data.get("email", ''))], limit=1
+                    )
+                    repository_owner_data['user_id'] = \
+                        repository_owner_user and repository_owner_user.id or False
 
-            if 'email' in repository_owner_data:
-                repository_owner_user = ResUser.search(
-                    [("email", "=", repository_owner_data["email"])], limit=1
-                )
-                repository_owner_data['user_id'] = \
-                    repository_owner_user and repository_owner_user.id or False
+                repository_owner = GitUser.search([
+                    ("username", '=', repository_owner_data.get("username", 'Unknow')),
+                    ("type", "=", repository_owner_data.get('type', False)
+                ], limit=1)
 
-            repository_owner = GitUser.search([
-                ("username", '=', repository_owner_data["username"]),
-                ("type", "=", repository_owner_data['type'])
-            ], limit=1)
-
-            if repository_owner:
-                repository_owner.write(repository_owner_data)
-            else:
-                repository_owner = GitUser.create(repository_owner_data)
+                if repository_owner:
+                    repository_owner.write(repository_owner_data)
+                else:
+                    repository_owner = GitUser.create(repository_owner_data)
             # -----------------------------------------------------------
 
             # ==========================================================
@@ -250,20 +250,21 @@ class GitController(http.Controller):
             # ==========================================================
             # UPDATE/CREATE Branch
             # ----------------------------------------------------------
-            for branch_data in context.payload['branches']:
+            for branch_data in context.payload.get('branches', []):
                 self.process_branch(branch_data,
                                     task_commits,
                                     orphan_commits,
                                     context)
 
             # CREATE email notification for every affected task
-            sender = context.payload['sender']
-            sender = GitUser.search([
-                ("username", "=", sender["username"])
-            ], limit=1)
+            sender = context.payload.get('sender', False)
+            if sender:
+                sender = GitUser.search([
+                    ("username", "=", sender["username"])
+                ], limit=1)
 
             if len(task_commits):
-                self.send_task_commits(task_commits, sender. context)
+                self.send_task_commits(task_commits, sender, context)
 
             if len(orphan_commits):
                 self.send_orphan_commits(orphan_commits, sender, context)
@@ -313,7 +314,7 @@ class GitController(http.Controller):
         branch = GitBranch.search([
             ("name", '=', branch_data["name"]),
             ("repository_id", "=", branch_data["repository_id"]),
-            ("type", "=", branch_data["type"])
+            ("type", "=", branch_data.get("type", False))
         ], limit=1)
 
         if branch:
@@ -323,7 +324,7 @@ class GitController(http.Controller):
 
         for commit_data in commits:
             task_keys = find_task_keys(
-                task_key_pattern, commit_data["message"]
+                task_key_pattern, commit_data.get("message", False)
             )
             tasks = len(task_keys) and ProjectTask.search([
                 ("key", "in", task_keys)
@@ -334,12 +335,12 @@ class GitController(http.Controller):
             # ----------------------------------------------------
             commit_author_data = commit_data.pop('author')
             commit_author = GitUser.search([
-                ("email", '=', commit_author_data["email"]),
-                ("type", "=", commit_author_data["type"])
+                ("email", '=', commit_author_data.get("email", '')),
+                ("type", "=", commit_author_data.get("type", False))
             ], limit=1)
 
             author_user = ResUser.search([
-                ('email', '=', commit_author_data["email"])
+                ('email', '=', commit_author_data.get("email", ''))
             ], limit=1)
             if author_user:
                 commit_author["user_id"] = author_user.id
@@ -356,8 +357,8 @@ class GitController(http.Controller):
                 len(tasks) and [(6, 0, tasks.ids)] or []
 
             commit = GitCommit.search([
-                ("name", '=', commit_data["name"]),
-                ("type", "=", commit_data["type"])
+                ("name", '=', commit_data.get("name", False)),
+                ("type", "=", commit_data.get("type", False))
             ], limit=1)
 
             if commit:
