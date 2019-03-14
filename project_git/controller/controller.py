@@ -227,7 +227,7 @@ class GitController(http.Controller):
 
                 repository_owner = GitUser.search([
                     ("username", '=', repository_owner_data.get("username", 'Unknow')),
-                    ("type", "=", repository_owner_data.get('type', False)
+                    ("type", "=", repository_owner_data.get('type', False))
                 ], limit=1)
 
                 if repository_owner:
