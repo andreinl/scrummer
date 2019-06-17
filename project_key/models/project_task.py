@@ -35,6 +35,7 @@ class Task(models.Model):
     @api.model
     @api.returns('self', lambda value: value.id)
     def create(self, vals):
+        project_id = False
         if vals.get('project_id', False):
             project_id = vals['project_id']
         elif self._context.get('default_project_id', False):

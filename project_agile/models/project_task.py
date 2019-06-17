@@ -195,6 +195,21 @@ class TaskType(models.Model):
         default=True,
     )
 
+    is_default_type = fields.Boolean(string='Is Default Type', default=False)
+
+    @api.multi
+    def write(self, values):
+        if values.get('is_default_type', False) and values['is_default_type']:
+            default_task_type = self.search([('is_default_type', '=', True)])
+            default_task_type.write({'is_default_type': False})
+        return super(TaskType, self).write(values)
+
+    @api.constrains('is_default_type')
+    def check_only_one_default_type(self):
+        default_task_type = self.search([('is_default_type', '=', True)])
+        if default_task_type and len(default_task_type.ids) > 1:
+            raise exceptions.ValidationError(_('You can only have one default task type - %s.') % default_task_type.mapped('name'))
+
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         if args is None:
@@ -263,10 +278,26 @@ class TaskPriority(models.Model):
         string='Icon'
     )
 
+    is_default_priority = fields.Boolean(string='Is Default Priority', default=False)
+
     _sql_constraints = [
         ('project_task_priority_name_unique', 'unique(name)',
          'Priority name already exists')
     ]
+
+    @api.multi
+    def write(self, values):
+        if values.get('is_default_priority', False) and values['is_default_priority']:
+            default_task_priority = self.search([('is_default_priority', '=', True)])
+            default_task_priority.write({'is_default_priority': False})
+        return super(TaskPriority, self).write(values)
+
+    @api.constrains('is_default_priority')
+    def check_only_one_default_priority(self):
+        default_task_priority = self.search([('is_default_priority', '=', True)])
+        if default_task_priority and len(default_task_priority.ids) > 1:
+            raise exceptions.ValidationError(
+                _('You can only have one default task type - %s.') % default_task_priority.mapped('name'))
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
@@ -299,6 +330,7 @@ class Task(models.Model):
         string='Type',
         required=True,
         ondelete="restrict",
+        default=lambda self:self.env['project.task.type2'].search([('is_default_type', '=', True)], limit=1),
     )
     agile_order = fields.Float(
         required=False,
@@ -403,6 +435,7 @@ class Task(models.Model):
         string='Priority',
         required=True,
         ondelete="restrict",
+        default=lambda self: self.env['project.task.priority'].search([('is_default_priority', '=', True)], limit=1),
     )
 
     story_points = fields.Integer(

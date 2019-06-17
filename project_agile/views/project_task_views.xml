@@ -47,6 +47,7 @@
                         <field name="allow_sub_tasks"/>
                         <field name="allow_story_points"/>
                         <field name="portal_visible"/>
+                        <field name="is_default_type"/>
                     </group>
                     <notebook>
                         <page name="description" string="Description">
@@ -137,6 +138,7 @@
                         <h1><field name="name" required="1"/></h1>
                     </div>
                     <group name="configuration">
+                        <field name="is_default_priority"/>
                     </group>
                     <notebook>
                         <page name="description" string="Description">
