@@ -13,10 +13,7 @@
         "project_agile_workflow_transitions_by_task_type",
         "scrummer",
     ],
-
-    "data": [
-        "views/scrummer_workflow_transitions_by_task_type.xml",
-    ],
+    "data": ["views/scrummer_workflow_transitions_by_task_type.xml",],
     "images": [],
     "installable": True,
 }

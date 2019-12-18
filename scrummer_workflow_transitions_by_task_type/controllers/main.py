@@ -7,5 +7,5 @@ from odoo.addons.scrummer.controllers import main
 class ScrummerController(main.ScrummerController):
     def prepare_transition(self, transition):
         data = super(ScrummerController, self).prepare_transition(transition)
-        data['task_type_ids'] = [x['id'] for x in transition.task_type_ids]
+        data["task_type_ids"] = [x["id"] for x in transition.task_type_ids]
         return data
