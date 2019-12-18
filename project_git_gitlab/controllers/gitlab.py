@@ -2,28 +2,32 @@
 # License LGPLv3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.en.html).
 
 from odoo import http
-from odoo.addons.project_git.controller.controller \
-    import GitController, GitContext
+from odoo.addons.project_git.controller.controller import (
+    GitController,
+    GitContext,
+)
 
 
 class GitLabContext(GitContext):
     def __init__(self, token, payload):
-        GitContext.__init__(self, 'gitlab', token, payload)
+        GitContext.__init__(self, "gitlab", token, payload)
 
     @property
     def gitlab_token(self):
-        return self.header['token']
+        return self.header["token"]
 
     @property
     def has_gitlab_token(self):
-        return 'token' in self.header
+        return "token" in self.header
 
 
 class GitLabController(GitController):
-
-    @http.route([
-        '/gitlab/payload/<string:token>'
-    ], type='json', auth='public',  website=True)
+    @http.route(
+        ["/gitlab/payload/<string:token>"],
+        type="json",
+        auth="public",
+        website=True,
+    )
     def process_request_gitlab(self, token, *args, **kw):
         return self.process_request(
             GitLabContext(token, http.request.jsonrequest)

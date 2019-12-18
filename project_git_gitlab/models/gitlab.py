@@ -7,23 +7,19 @@ from odoo.addons.project_git.utils.utils import urljoin
 
 from dateutil.parser import parse
 
-TYPE = [('gitlab', 'GitLab')]
+TYPE = [("gitlab", "GitLab")]
 
 
 class GitUser(models.Model):
-    _inherit = 'project.git.user'
+    _inherit = "project.git.user"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitRepository(models.Model):
-    _inherit = 'project.git.repository'
+    _inherit = "project.git.repository"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
     def _secret_visible_for_types(self):
         types = super(GitRepository, self)._secret_visible_for_types()
@@ -32,23 +28,19 @@ class GitRepository(models.Model):
 
 
 class GitCommit(models.Model):
-    _inherit = 'project.git.commit'
+    _inherit = "project.git.commit"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitBranch(models.Model):
-    _inherit = 'project.git.branch'
+    _inherit = "project.git.branch"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitPayloadParser(models.AbstractModel):
-    _inherit = 'project.git.payload.parser'
+    _inherit = "project.git.payload.parser"
 
     # -------------------------------------------
     # Header
@@ -58,8 +50,8 @@ class GitPayloadParser(models.AbstractModel):
         action_type = self._map_gitlab_action_type(raw_payload)
 
         data = {
-            "event": raw_payload['object_kind'],
-            "delivery": raw_payload['checkout_sha'],
+            "event": raw_payload["object_kind"],
+            "delivery": raw_payload["checkout_sha"],
             "action_type": action_type,
             "action": self._format_action_name(action_type),
         }
@@ -71,19 +63,18 @@ class GitPayloadParser(models.AbstractModel):
         return data
 
     def _map_gitlab_action_type(self, raw_payload):
-
         def is_delete_event(evt):
-            after = raw_payload['after']
-            return evt == 'push' and (after.isdigit() and not int(after))
+            after = raw_payload["after"]
+            return evt == "push" and (after.isdigit() and not int(after))
 
-        event = raw_payload['object_kind']
+        event = raw_payload["object_kind"]
 
         if event not in self._gitlab_supported_event_types():
             return False
 
         # In case of a push we need to check if we have a delete event
         if is_delete_event(event):
-            event = 'delete'
+            event = "delete"
 
         return event
 
@@ -108,29 +99,27 @@ class GitPayloadParser(models.AbstractModel):
         return {
             "repository": self.parse_gitlab_repository(context),
             "branches": [self.parse_gitlab_branch(context)],
-            "sender": self.parse_gitlab_sender(context)
+            "sender": self.parse_gitlab_sender(context),
         }
 
     # -------------------------------------------
     # Action Delete
     # -------------------------------------------
     def parse_gitlab_delete(self, context):
-        return {
-            "branches": [self.parse_gitlab_branch(context, False)]
-        }
+        return {"branches": [self.parse_gitlab_branch(context, False)]}
 
     # -------------------------------------------
     # Paring methods
     # -------------------------------------------
     def parse_gitlab_branch(self, context, commits=True):
         payload = context.raw_payload
-        branch_name = payload["ref"].split('/')[-1]
+        branch_name = payload["ref"].split("/")[-1]
         data = {
             "name": branch_name,
             "type": context.type,
             "repository_id": context.repository.id,
             "url": urljoin(
-                payload['project']['homepage'] + '/', 'tree', branch_name
+                payload["project"]["homepage"] + "/", "tree", branch_name
             ),
         }
 
@@ -157,12 +146,11 @@ class GitPayloadParser(models.AbstractModel):
 
     def parse_gitlab_commit_author(self, context, commit):
         author_data = dict(
-            name=commit["author"]["name"],
-            email=commit["author"]["email"]
+            name=commit["author"]["name"], email=commit["author"]["email"]
         )
 
         repository_owner = self.parse_gitlab_repository_owner(context)
-        if repository_owner['email'] == author_data['email']:
+        if repository_owner["email"] == author_data["email"]:
             return repository_owner
 
         return author_data
@@ -184,9 +172,9 @@ class GitPayloadParser(models.AbstractModel):
         return {
             "name": project["name"],
             "full_name": project["path_with_namespace"],
-            "url": project['homepage'],
+            "url": project["homepage"],
             "type": context.type,
-            "owner": self.parse_gitlab_repository_owner(context)
+            "owner": self.parse_gitlab_repository_owner(context),
         }
 
     def parse_gitlab_repository_owner(self, context):
@@ -194,7 +182,7 @@ class GitPayloadParser(models.AbstractModel):
 
         utils = re.search(
             r"(https?://.+/)(\w+)/.+",
-            raw_payload["repository"]["git_http_url"]
+            raw_payload["repository"]["git_http_url"],
         )
 
         link = utils.group(1)
