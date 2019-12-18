@@ -8,10 +8,7 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow",
-        "server_action_sudo",
-    ],
+    "depends": ["project_workflow", "server_action_sudo",],
     "data": [
         "security/ir.model.access.csv",
         "views/project_workflow_views.xml",
