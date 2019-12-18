@@ -5,16 +5,16 @@ from odoo import models
 
 
 def name(value):
-    return {'name': value}
+    return {"name": value}
 
 
 class XmlWorkflowReader(models.AbstractModel):
-    _inherit = 'project.workflow.xml.reader'
+    _inherit = "project.workflow.xml.reader"
 
     def read_transition(self, element):
         data = super(XmlWorkflowReader, self).read_transition(element)
 
-        data['groups'] = self.read_security_groups(element)
+        data["groups"] = self.read_security_groups(element)
 
         return data
 
@@ -26,14 +26,14 @@ class XmlWorkflowReader(models.AbstractModel):
         :return: Returns the workflow transitions.
         """
         groups = []
-        for e in element.iterfind('groups/group'):
+        for e in element.iterfind("groups/group"):
             groups.append(self.read_security_group(e))
         return groups
 
     def read_security_group(self, element):
         return {
-            'name': self.read_string(element, 'name'),
-            'xml_id': self.read_string(element, 'xml_id'),
+            "name": self.read_string(element, "name"),
+            "xml_id": self.read_string(element, "xml_id"),
         }
 
     def extend_rng(self, rng_etree):
@@ -45,7 +45,7 @@ class XmlWorkflowReader(models.AbstractModel):
         transition = root.xpath(
             "//rng:define[@name='transition']"
             "//rng:element[@name='transition']",
-            namespaces=self._rng_namespace_map
+            namespaces=self._rng_namespace_map,
         )[0]
 
         transition.append(self.rng_groups_element())
@@ -56,18 +56,12 @@ class XmlWorkflowReader(models.AbstractModel):
 
         doc = E.grammar(
             E.define(
-                name('group'),
+                name("group"),
                 E.element(
-                    name('group'),
-                    E.attribute(
-                        name('name'),
-                        E.text()
-                    ),
-                    E.attribute(
-                        name('xml_id'),
-                        E.text()
-                    )
-                )
+                    name("group"),
+                    E.attribute(name("name"), E.text()),
+                    E.attribute(name("xml_id"), E.text()),
+                ),
             )
         )
         return doc[0]
@@ -77,14 +71,8 @@ class XmlWorkflowReader(models.AbstractModel):
         doc = E.grammar(
             E.optional(
                 E.element(
-                    name('groups'),
-                    E.optional(
-                        E.oneOrMore(
-                            E.ref(
-                                name("group")
-                            )
-                        )
-                    )
+                    name("groups"),
+                    E.optional(E.oneOrMore(E.ref(name("group")))),
                 )
             )
         )

@@ -8,12 +8,8 @@
     "license": "LGPL-3",
     "author": "Odoo Community Association (OCA), Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow"
-    ],
-    "data": [
-        "views/project_workflow_views.xml",
-    ],
+    "depends": ["project_workflow"],
+    "data": ["views/project_workflow_views.xml",],
     "images": [],
     "installable": True,
 }
