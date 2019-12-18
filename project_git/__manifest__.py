@@ -5,7 +5,7 @@
     "name": "Project Git",
     "summary": "Integrates your projects with git based services",
     "category": "Project",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Odoo Community Association (OCA), Modoolar",
     "website": "https://www.modoolar.com/",
