@@ -9,18 +9,13 @@
     "license": "LGPL-3",
     "author": "Odoo Community Association (OCA), Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project",
-    ],
+    "depends": ["project",],
     "data": [
         "views/project_key_views.xml",
-        "views/project_portal_templates.xml"
+        "views/project_portal_templates.xml",
     ],
-
     "demo": [],
-    "qweb": [
-
-    ],
+    "qweb": [],
     "application": False,
     "post_init_hook": "post_init_hook",
 }
