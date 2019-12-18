@@ -9,13 +9,8 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_agile",
-    ],
-
-    "data": [
-        "views/project_workflow_views.xml",
-    ],
+    "depends": ["project_agile",],
+    "data": ["views/project_workflow_views.xml",],
     "images": [],
     "installable": True,
 }
