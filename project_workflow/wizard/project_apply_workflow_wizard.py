@@ -5,22 +5,20 @@ from odoo import models, fields, api
 
 
 class ProjectEditWorkflowEWizard(models.TransientModel):
-    _name = 'project.edit.workflow.wizard'
+    _name = "project.edit.workflow.wizard"
 
     project_id = fields.Many2one(
-        comodel_name='project.project',
-        string='Project',
+        comodel_name="project.project", string="Project",
     )
 
     current_workflow_id = fields.Many2one(
-        comodel_name='project.workflow',
-        string='Current Workflow'
+        comodel_name="project.workflow", string="Current Workflow"
     )
 
     new_workflow_id = fields.Many2one(
-        comodel_name='project.workflow',
-        string='New Workflow',
-        domain="[('state', '=', 'live'), ('id', '!=', current_workflow_id)]"
+        comodel_name="project.workflow",
+        string="New Workflow",
+        domain="[('state', '=', 'live'), ('id', '!=', current_workflow_id)]",
     )
 
     @api.multi
@@ -30,16 +28,19 @@ class ProjectEditWorkflowEWizard(models.TransientModel):
         publisher = self.get_workflow_publisher()
         result = publisher.publish(
             self.current_workflow_id,
-            self.new_workflow_id, project_id=self.project_id, switch=True
+            self.new_workflow_id,
+            project_id=self.project_id,
+            switch=True,
         )
 
         if result.has_conflicts:
             return {
-                'type': 'ir.actions.act_multi',
-                'actions': [{'type': 'ir.actions_act_window_close'},
-                            result.action
-                            ]
+                "type": "ir.actions.act_multi",
+                "actions": [
+                    {"type": "ir.actions_act_window_close"},
+                    result.action,
+                ],
             }
 
     def get_workflow_publisher(self):
-        return self.env['project.workflow.publisher']
+        return self.env["project.workflow.publisher"]

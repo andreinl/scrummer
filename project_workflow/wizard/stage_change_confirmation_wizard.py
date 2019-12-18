@@ -5,29 +5,24 @@ from odoo import models, fields, api
 
 
 class StageChangeConfirmationWizard(models.TransientModel):
-    _name = 'wkf.project.task.confirmation'
+    _name = "wkf.project.task.confirmation"
 
     user_id = fields.Many2one(
-        comodel_name='res.users',
-        string='Assignee',
+        comodel_name="res.users",
+        string="Assignee",
         required=True,
         default=lambda s: s.env.user.id,
     )
 
     stage_id = fields.Many2one(
-        comodel_name='project.task.type',
-        string='New Stage',
-        readonly=True,
+        comodel_name="project.task.type", string="New Stage", readonly=True,
     )
 
-    message = fields.Html(
-        string='Action Message',
-        required=True,
-    )
+    message = fields.Html(string="Action Message", required=True,)
 
     task_id = fields.Many2one(
-        comodel_name='project.task',
-        string='Task',
+        comodel_name="project.task",
+        string="Task",
         required=True,
         ondelete="cascade",
     )
@@ -40,12 +35,14 @@ class StageChangeConfirmationWizard(models.TransientModel):
         self.task_id.write(values)
 
         if self.message:
-            return self.task_id.message_post(body=self.message, message_type='comment')
+            return self.task_id.message_post(
+                body=self.message, message_type="comment"
+            )
 
-        return {'type': 'ir.actions.act_window_close'}
+        return {"type": "ir.actions.act_window_close"}
 
     def prepare_values(self):
         return {
-            'user_id': self.user_id.id,
-            'stage_id': self.stage_id.id,
+            "user_id": self.user_id.id,
+            "stage_id": self.stage_id.id,
         }

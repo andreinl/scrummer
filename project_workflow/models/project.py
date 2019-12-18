@@ -6,21 +6,18 @@ from odoo.tools.safe_eval import safe_eval
 
 
 class Project(models.Model):
-    _inherit = 'project.project'
+    _inherit = "project.project"
 
-    allow_workflow = fields.Boolean(
-        string='Allow Workflow?',
-        default=False,
-    )
+    allow_workflow = fields.Boolean(string="Allow Workflow?", default=False,)
 
     workflow_id = fields.Many2one(
-        comodel_name='project.workflow',
-        string='Workflow',
+        comodel_name="project.workflow",
+        string="Workflow",
         ondelete="restrict",
-        help="Project Workflow"
+        help="Project Workflow",
     )
 
-    @api.onchange('workflow_id')
+    @api.onchange("workflow_id")
     def onchange_workflow_id(self):
         """
         When a workflow gets changed we need to collect workflow stages
@@ -33,9 +30,9 @@ class Project(models.Model):
 
     @api.model
     def create(self, vals):
-        if not vals.get('allow_workflow', False):
-            vals['workflow_id'] = False
-            vals['type_ids'] = []
+        if not vals.get("allow_workflow", False):
+            vals["workflow_id"] = False
+            vals["type_ids"] = []
         new = super(Project, self).create(vals)
 
         if new.allow_workflow and new.workflow_id:
@@ -48,14 +45,14 @@ class Project(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'allow_workflow' in vals and not vals['allow_workflow']:
-            vals['workflow_id'] = False
-            vals['type_ids'] = [(5,)]
+        if "allow_workflow" in vals and not vals["allow_workflow"]:
+            vals["workflow_id"] = False
+            vals["type_ids"] = [(5,)]
 
         return super(Project, self).write(vals)
 
     def get_workflow_publisher(self):
-        return self.env['project.workflow.publisher']
+        return self.env["project.workflow.publisher"]
 
     @api.multi
     def button_run_workflow_wizard(self):
@@ -77,11 +74,11 @@ class Project(models.Model):
         self.ensure_one()
         workflow_id = self.workflow_id and self.workflow_id.id or False
         action = self.load_edit_workflow_wizard_action()
-        action_context = action.get('context', False)
+        action_context = action.get("context", False)
         action_context = action_context and safe_eval(action_context) or {}
-        action_context['default_current_workflow_id'] = workflow_id
-        action_context['default_project_id'] = self.id
-        action['context'] = action_context
+        action_context["default_current_workflow_id"] = workflow_id
+        action_context["default_project_id"] = self.id
+        action["context"] = action_context
         return action
 
     @api.model
@@ -92,62 +89,63 @@ class Project(models.Model):
         :return: Returns an action which opens a wizard for setting or
         switching a workflow on a project.
         """
-        return self.env['ir.actions.act_window'].for_xml_id(
-            'project_workflow', 'project_edit_workflow_wizard_action'
+        return self.env["ir.actions.act_window"].for_xml_id(
+            "project_workflow", "project_edit_workflow_wizard_action"
         )
 
 
 class Task(models.Model):
-    _inherit = 'project.task'
+    _inherit = "project.task"
 
     allow_workflow = fields.Boolean(
-        related="project_id.allow_workflow",
-        readonly=True,
+        related="project_id.allow_workflow", readonly=True,
     )
 
-    stage_id = fields.Many2one(group_expand='_read_workflow_stage_ids')
+    stage_id = fields.Many2one(group_expand="_read_workflow_stage_ids")
 
     # This field is here just so we can display stage information
     # somewhere else on the task form view and to keep compatibility
     # with other modules like "project_forecast" module.
     wkf_stage_id = fields.Many2one(
-        comodel_name='project.task.type',
-        related='stage_id',
-        string='Workflow Stage',
+        comodel_name="project.task.type",
+        related="stage_id",
+        string="Workflow Stage",
         readonly=True,
-        track_visibility='never',
+        track_visibility="never",
     )
 
     workflow_id = fields.Many2one(
-        comodel_name='project.workflow',
-        related='project_id.workflow_id',
+        comodel_name="project.workflow",
+        related="project_id.workflow_id",
         readonly=True,
     )
 
     wkf_state_id = fields.Many2one(
-        comodel_name='project.workflow.state',
-        string='Workflow State',
+        comodel_name="project.workflow.state",
+        string="Workflow State",
         compute="_compute_workflow_state",
-        store=True
+        store=True,
     )
 
     wkf_state_type = fields.Selection(
-        related='wkf_state_id.type',
-        string='Wkf State Type'
+        related="wkf_state_id.type", string="Wkf State Type"
     )
 
     @api.model
     def _read_workflow_stage_ids(self, stages, domain, order):
-        if 'default_project_id' not in self.env.context:
+        if "default_project_id" not in self.env.context:
             return self._read_group_stage_ids(stages, domain, order)
 
         # TODO: Fix this, it should browse as above user
-        project = self.env['project.project'].browse(
-            self.env.context['default_project_id']
+        project = self.env["project.project"].browse(
+            self.env.context["default_project_id"]
         )
 
-        if not project.allow_workflow or \
-                not project.workflow_id or not project.workflow_id.state_ids:
+        if (
+            not project.allow_workflow
+            or not project.workflow_id
+            or not project.workflow_id.state_ids
+        ):
             return self._read_group_stage_ids(stages, domain, order)
 
         sorted_state_ids = project.workflow_id.state_ids.sorted(
@@ -158,36 +156,45 @@ class Task(models.Model):
 
     @api.multi
     @api.depends(
-        'stage_id', 'workflow_id', 'project_id.workflow_id',
-        'workflow_id.state_ids', 'workflow_id.state_ids.stage_id')
+        "stage_id",
+        "workflow_id",
+        "project_id.workflow_id",
+        "workflow_id.state_ids",
+        "workflow_id.state_ids.stage_id",
+    )
     def _compute_workflow_state(self):
-        state = self.env['project.workflow.state']
+        state = self.env["project.workflow.state"]
         tasks = self.filtered("project_id.allow_workflow")
 
         with_workflow = self.filtered(lambda r: r.project_id.allow_workflow)
 
         for task in with_workflow:
             if task.project_id.allow_workflow:
-                wkf_state = state.search([
-                    ('workflow_id', '=', task.workflow_id.id),
-                    ('stage_id', '=', task.stage_id.id)
-                ])
-                task.wkf_state_id = wkf_state.exists() and wkf_state.id or False
+                wkf_state = state.search(
+                    [
+                        ("workflow_id", "=", task.workflow_id.id),
+                        ("stage_id", "=", task.stage_id.id),
+                    ]
+                )
+                task.wkf_state_id = (
+                    wkf_state.exists() and wkf_state.id or False
+                )
             else:
                 task.wkf_state_id = False
 
     @api.cr_uid_context
     def _get_default_stage_id(self):
-        if 'default_project_id' not in self.env.context and \
-                'project_id' not in self.env.context:
+        if (
+            "default_project_id" not in self.env.context
+            and "project_id" not in self.env.context
+        ):
             return False
 
         project_id = self.env.context.get(
-            'default_project_id',
-            self.env.context.get('project_id')
+            "default_project_id", self.env.context.get("project_id")
         )
 
-        project = self.env['project.project'].browse(project_id)
+        project = self.env["project.project"].browse(project_id)
         if project and project.allow_workflow and project.workflow_id:
             if not project.workflow_id.default_state_id:
                 raise exceptions.ValidationError(
@@ -195,24 +202,25 @@ class Task(models.Model):
                         "Project workflow '%s' has no default state."
                         "Please configure the workflow, so that we know what "
                         "default stage should be"
-                    ) % project.workflow_id.name
+                    )
+                    % project.workflow_id.name
                 )
             return project.workflow_id.default_state_id.stage_id.id
 
         return False
 
     @api.model
-    @api.returns('self', lambda value: value.id)
+    @api.returns("self", lambda value: value.id)
     def create(self, vals):
         project_id = vals.get(
-            'project_id', self.env.context.get('default_project_id', False)
+            "project_id", self.env.context.get("default_project_id", False)
         )
         stage_id = self.with_context(
             default_project_id=project_id
         )._get_default_stage_id()
 
         if stage_id:
-            vals['stage_id'] = stage_id
+            vals["stage_id"] = stage_id
 
         new = super(Task, self).create(vals)
 
@@ -223,8 +231,8 @@ class Task(models.Model):
 
     @api.multi
     def write(self, vals):
-        stage_id = vals.get('stage_id', False)
-        if stage_id and not self.env.context.get('ignore_workflow', False):
+        stage_id = vals.get("stage_id", False)
+        if stage_id and not self.env.context.get("ignore_workflow", False):
             withoutw = self.filtered(lambda k: not k.workflow_id)
             if withoutw:
                 super(Task, withoutw).write(vals)
@@ -232,22 +240,28 @@ class Task(models.Model):
             withw = self.filtered(
                 lambda k: k.project_id.allow_workflow and k.workflow_id
             )
-            stage_id = vals.pop('stage_id')
+            stage_id = vals.pop("stage_id")
             for task in withw:
                 task.workflow_id.trigger(task, stage_id)
             return super(Task, withw).write(vals)
         else:
             return super(Task, self).write(vals)
 
-    def stage_find(self, section_id, domain=None, order='sequence'):
-        if self.project_id and \
-                 self.project_id.allow_workflow and self.project_id.workflow_id:
+    def stage_find(self, section_id, domain=None, order="sequence"):
+        if (
+            self.project_id
+            and self.project_id.allow_workflow
+            and self.project_id.workflow_id
+        ):
             if not self.project_id.workflow_id.default_state_id:
-                raise exceptions.ValidationError(_(
-                    "Project workflow '%s' has no default state."
-                    "Please configure the workflow, so that we know what "
-                    "default stage should be"
-                ) % self.project_id.workflow_id.name)
+                raise exceptions.ValidationError(
+                    _(
+                        "Project workflow '%s' has no default state."
+                        "Please configure the workflow, so that we know what "
+                        "default stage should be"
+                    )
+                    % self.project_id.workflow_id.name
+                )
             return self.project_id.workflow_id.default_state_id.stage_id.id
         else:
             if not domain:
@@ -258,7 +272,7 @@ class Task(models.Model):
     def _get_tracked_fields(self, updated_fields):
         tracked_fields = super(Task, self)._get_tracked_fields(updated_fields)
 
-        if 'wkf_stage_id' in tracked_fields:
-            del tracked_fields['wkf_stage_id']
+        if "wkf_stage_id" in tracked_fields:
+            del tracked_fields["wkf_stage_id"]
 
         return tracked_fields

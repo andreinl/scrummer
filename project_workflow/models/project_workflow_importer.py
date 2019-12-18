@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 
 class WorkflowImporter(models.AbstractModel):
-    _name = 'project.workflow.importer'
+    _name = "project.workflow.importer"
 
     def _load_task_stages(self):
         """
@@ -16,7 +16,7 @@ class WorkflowImporter(models.AbstractModel):
         :return: Returns stage dictionary
         """
         stages = dict()
-        for stage in self.env['project.task.type'].search([]):
+        for stage in self.env["project.task.type"].search([]):
             stages[self.get_stage_name(stage)] = stage
         return stages
 
@@ -48,7 +48,7 @@ class WorkflowImporter(models.AbstractModel):
         all_stages = self._load_task_stages()
 
         stages_to_create = []
-        for state in workflow['states']:
+        for state in workflow["states"]:
             if self.get_state_name(state) not in all_stages:
                 stages_to_create.append(state)
 
@@ -60,10 +60,15 @@ class WorkflowImporter(models.AbstractModel):
         state_prep = self.prepare_state
         state_name = self.get_state_name
 
-        wkf = self.create_workflow(self.prepare_workflow(workflow, [
-            (0, 0, state_prep(state, all_stages[state_name(state)].id))
-            for state in workflow['states']
-        ]))
+        wkf = self.create_workflow(
+            self.prepare_workflow(
+                workflow,
+                [
+                    (0, 0, state_prep(state, all_stages[state_name(state)].id))
+                    for state in workflow["states"]
+                ],
+            )
+        )
 
         def get_state(stage_id):
             for state in wkf.state_ids:
@@ -72,7 +77,7 @@ class WorkflowImporter(models.AbstractModel):
             return False
 
         wkf.default_state_id = get_state(
-            all_stages[workflow['default_state']]
+            all_stages[workflow["default_state"]]
         ).id
 
         states = dict()
@@ -81,17 +86,17 @@ class WorkflowImporter(models.AbstractModel):
 
         transitions = [
             (0, 0, self.prepare_transition(t, states))
-            for t in workflow['transitions']
+            for t in workflow["transitions"]
         ]
 
-        wkf.write({'transition_ids': transitions})
+        wkf.write({"transition_ids": transitions})
         return wkf
 
     def create_stage(self, stage_data):
-        return self.env['project.task.type'].create(stage_data)
+        return self.env["project.task.type"].create(stage_data)
 
     def create_workflow(self, workflow_data):
-        return self.env['project.workflow'].create(workflow_data)
+        return self.env["project.workflow"].create(workflow_data)
 
     def prepare_workflow(self, workflow, state_ids):
         """
@@ -102,9 +107,9 @@ class WorkflowImporter(models.AbstractModel):
         within odoo database.
         """
         return {
-            'name': workflow['name'],
-            'description': workflow['description'],
-            'state_ids': state_ids,
+            "name": workflow["name"],
+            "description": workflow["description"],
+            "state_ids": state_ids,
         }
 
     def prepare_task_stage(self, state):
@@ -114,12 +119,12 @@ class WorkflowImporter(models.AbstractModel):
         :return: Returns prepared ``project.task.type`` values.
         """
         return {
-            'name': state['name'],
-            'description': state['description'],
+            "name": state["name"],
+            "description": state["description"],
         }
 
     def get_state_name(self, state):
-        return state['name']
+        return state["name"]
 
     def prepare_state(self, state, stage_id):
         """
@@ -128,12 +133,12 @@ class WorkflowImporter(models.AbstractModel):
         :return: Returns prepared ``project.workflow.state`` values.
         """
         return {
-            'stage_id': stage_id,
-            'sequence': state['sequence'],
-            'kanban_sequence': state['kanban_sequence'],
-            'type': state['type'],
-            'xpos': state['xpos'],
-            'ypos': state['ypos'],
+            "stage_id": stage_id,
+            "sequence": state["sequence"],
+            "kanban_sequence": state["kanban_sequence"],
+            "type": state["type"],
+            "xpos": state["xpos"],
+            "ypos": state["ypos"],
         }
 
     def prepare_transition(self, transition, states):
@@ -144,9 +149,9 @@ class WorkflowImporter(models.AbstractModel):
         :return: Returns prepared ``project.workflow.transition`` values.
         """
         return {
-            'name': transition['name'],
-            'description': transition['description'],
-            'src_id': states[transition['src']].id,
-            'dst_id': states[transition['dst']].id,
-            'user_confirmation': transition['confirmation'],
+            "name": transition["name"],
+            "description": transition["description"],
+            "src_id": states[transition["src"]].id,
+            "dst_id": states[transition["dst"]].id,
+            "user_confirmation": transition["confirmation"],
         }

@@ -13,15 +13,14 @@ _logger = logging.getLogger(__name__)
 
 
 class XmlWorkflowReader(models.AbstractModel):
-    _name = 'project.workflow.xml.reader'
+    _name = "project.workflow.xml.reader"
 
-    _rng_namespace = 'http://relaxng.org/ns/structure/1.0'
-    _rng_namespace_map = {'rng': 'http://relaxng.org/ns/structure/1.0'}
+    _rng_namespace = "http://relaxng.org/ns/structure/1.0"
+    _rng_namespace_map = {"rng": "http://relaxng.org/ns/structure/1.0"}
 
     def get_element_maker(self):
         return ElementMaker(
-            namespace=self._rng_namespace,
-            nsmap=self._rng_namespace_map,
+            namespace=self._rng_namespace, nsmap=self._rng_namespace_map,
         )
 
     def validate_schema(self, xml):
@@ -69,7 +68,7 @@ class XmlWorkflowReader(models.AbstractModel):
         return rng_etree
 
     def get_rng_file_path(self):
-        return os.path.join('project_workflow', 'rng', 'workflow.rng')
+        return os.path.join("project_workflow", "rng", "workflow.rng")
 
     def wkf_read(self, stream):
         """
@@ -99,11 +98,11 @@ class XmlWorkflowReader(models.AbstractModel):
         """
 
         # Convert list of workflow states into dictionary
-        states = dict((s['name'], s) for s in workflow['states'])
+        states = dict((s["name"], s) for s in workflow["states"])
 
         # If the count of states in list and dictionary is different
         # then we have a potential problem
-        if len(states) != len(workflow['states']):
+        if len(states) != len(workflow["states"]):
             raise exceptions.ValidationError(
                 _("You have defined one or more states with the same name!")
             )
@@ -111,20 +110,23 @@ class XmlWorkflowReader(models.AbstractModel):
         # Next we check if all source and destination states can be found
         # in the states dictionary
         missing_states = set()
-        for transition in workflow['transitions']:
-            for state in ['src', 'dst']:
+        for transition in workflow["transitions"]:
+            for state in ["src", "dst"]:
                 value = transition[state]
                 if value not in states:
                     missing_states.add(value)
 
         # In case we have missing states we simply raise exception
         if len(missing_states) > 0:
-            raise exceptions.ValidationError(_(
-                "Following state(s) are referenced in the transitions but can"
-                " not be found: [%s]"
-            ) % ",".join(missing_states))
+            raise exceptions.ValidationError(
+                _(
+                    "Following state(s) are referenced in the transitions but can"
+                    " not be found: [%s]"
+                )
+                % ",".join(missing_states)
+            )
 
-        if not workflow.get('default_state', False):
+        if not workflow.get("default_state", False):
             raise exceptions.ValidationError(
                 _("Workflow default state is missing!")
             )
@@ -137,11 +139,11 @@ class XmlWorkflowReader(models.AbstractModel):
         :return: Returns workflow dictionary.
         """
         return {
-            'name': self.read_string(element, 'name'),
-            'description': self.read_string(element, 'description'),
-            'states': self.read_states(element),
-            'transitions': self.read_transitions(element),
-            'default_state': self.read_string(element, 'default-state')
+            "name": self.read_string(element, "name"),
+            "description": self.read_string(element, "description"),
+            "states": self.read_states(element),
+            "transitions": self.read_transitions(element),
+            "default_state": self.read_string(element, "default-state"),
         }
 
     def read_states(self, element):
@@ -152,7 +154,7 @@ class XmlWorkflowReader(models.AbstractModel):
         :return: Returns the list of the workflow states
         """
         states = []
-        for e in element.iterfind('states/state'):
+        for e in element.iterfind("states/state"):
             states.append(self.read_state(e))
         return states
 
@@ -164,15 +166,17 @@ class XmlWorkflowReader(models.AbstractModel):
         :return: Returns workflow state dictionary
         """
         return {
-            'name': self.read_string(element, 'name'),
-            'type': self.read_string(element, 'type', 'in_progress'),
-            'description': self.read_string(element, 'description'),
-            'xpos': self.read_integer(element, 'xpos', -1),
-            'ypos': self.read_integer(element, 'ypos', -1),
-            'sequence': self.read_integer(
-                element, 'sequence', default_value=1),
-            'kanban_sequence': self.read_integer(
-                element, 'kanban_sequence', default_value=10)
+            "name": self.read_string(element, "name"),
+            "type": self.read_string(element, "type", "in_progress"),
+            "description": self.read_string(element, "description"),
+            "xpos": self.read_integer(element, "xpos", -1),
+            "ypos": self.read_integer(element, "ypos", -1),
+            "sequence": self.read_integer(
+                element, "sequence", default_value=1
+            ),
+            "kanban_sequence": self.read_integer(
+                element, "kanban_sequence", default_value=10
+            ),
         }
 
     def read_transitions(self, element):
@@ -183,7 +187,7 @@ class XmlWorkflowReader(models.AbstractModel):
         :return: Returns the list of the workflow transitions.
         """
         transitions = []
-        for e in element.iterfind('transitions/transition'):
+        for e in element.iterfind("transitions/transition"):
             transitions.append(self.read_transition(e))
         return transitions
 
@@ -196,16 +200,17 @@ class XmlWorkflowReader(models.AbstractModel):
         :return: Returns workflow transition dictionary.
         """
         return {
-            'name': self.read_string(element, 'name'),
-            'description': self.read_string(element, 'description'),
-            'src': self.read_string(element, 'src'),
-            'dst': self.read_string(element, 'dst'),
-            'confirmation': self.read_string(element, 'confirmation'),
-            'kanban_color': self.read_string(
-                element, 'kanban-color', default_value='1')
+            "name": self.read_string(element, "name"),
+            "description": self.read_string(element, "description"),
+            "src": self.read_string(element, "src"),
+            "dst": self.read_string(element, "dst"),
+            "confirmation": self.read_string(element, "confirmation"),
+            "kanban_color": self.read_string(
+                element, "kanban-color", default_value="1"
+            ),
         }
 
-    def read_string(self, element, attribute_name, default_value=''):
+    def read_string(self, element, attribute_name, default_value=""):
         """
         Reads attribute of type ``string`` from the given xml element.
         :param element: The xml element from which the attribute value is read.
@@ -236,8 +241,8 @@ class XmlWorkflowReader(models.AbstractModel):
         the attribute is not present within xml element.
         :return: Returns attribute value of type ``boolean``.
         """
-        return bool(self.read_attribute(
-            element, attribute_name, default_value)
+        return bool(
+            self.read_attribute(element, attribute_name, default_value)
         )
 
     def read_attribute(self, element, name, default_value=None):
@@ -252,11 +257,11 @@ class XmlWorkflowReader(models.AbstractModel):
         return element.attrib.get(name, default_value)
 
 
-DEFAULT_ENCODING = 'utf-8'
+DEFAULT_ENCODING = "utf-8"
 
 
 class XmlWorkflowWriter(models.AbstractModel):
-    _name = 'project.workflow.xml.writer'
+    _name = "project.workflow.xml.writer"
 
     def wkf_write(self, workflow, stream, encoding=DEFAULT_ENCODING):
         """
@@ -284,7 +289,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         return etree.tostring(
             self._build_xml(workflow, element_tree=True),
             encoding=encoding,
-            pretty_print=True
+            pretty_print=True,
         )
 
     def _build_xml(self, workflow, element_tree=False):
@@ -314,7 +319,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns a new root workflow xml element.
         """
         attributes = self.prepare_workflow_attributes(workflow)
-        return etree.Element('project-workflow', attributes)
+        return etree.Element("project-workflow", attributes)
 
     def prepare_workflow_attributes(self, workflow):
         """
@@ -323,9 +328,9 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns dictionary with attribute values.
         """
         return {
-            'name': workflow.name,
-            'description': workflow.description,
-            'default-state': workflow.default_state_id.name
+            "name": workflow.name,
+            "description": workflow.description,
+            "default-state": workflow.default_state_id.name,
         }
 
     def create_states_element(self, parent, workflow):
@@ -336,7 +341,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns a new state xml element.
         """
         attributes = self.prepare_states_attributes(workflow)
-        return etree.SubElement(parent, 'states', attributes)
+        return etree.SubElement(parent, "states", attributes)
 
     def prepare_states_attributes(self, workflow):
         """
@@ -356,7 +361,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns a new state xml element.
         """
         attributes = self.prepare_state_attributes(state)
-        return etree.SubElement(parent, 'state', attributes)
+        return etree.SubElement(parent, "state", attributes)
 
     def prepare_state_attributes(self, state):
         """
@@ -365,16 +370,16 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns dictionary with attribute values.
         """
         values = {
-            'name': state.stage_id.name,
-            'type': state.type,
-            'xpos': str(state.xpos),
-            'ypos': str(state.ypos),
-            'sequence': str(state.sequence),
-            'kanban_sequence': str(state.kanban_sequence),
+            "name": state.stage_id.name,
+            "type": state.type,
+            "xpos": str(state.xpos),
+            "ypos": str(state.ypos),
+            "sequence": str(state.sequence),
+            "kanban_sequence": str(state.kanban_sequence),
         }
 
         if state.stage_id.description:
-            values['description'] = state.description
+            values["description"] = state.description
 
         return values
 
@@ -386,7 +391,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns a new transition xml element.
         """
         attributes = self.prepare_transitions_attributes(workflow)
-        return etree.SubElement(parent, 'transitions', attributes)
+        return etree.SubElement(parent, "transitions", attributes)
 
     def prepare_transitions_attributes(self, workflow):
         """
@@ -406,7 +411,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns a new transition xml element.
         """
         values = self.prepare_transition_attributes(transition)
-        return etree.SubElement(parent, 'transition', values)
+        return etree.SubElement(parent, "transition", values)
 
     def prepare_transition_attributes(self, transition):
         """
@@ -415,13 +420,13 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns dictionary with attribute values.
         """
         values = {
-            'name': transition.name,
-            'src': transition.src_id.stage_id.name,
-            'dst': transition.dst_id.stage_id.name,
-            'confirmation': str(transition.user_confirmation or False),
+            "name": transition.name,
+            "src": transition.src_id.stage_id.name,
+            "dst": transition.dst_id.stage_id.name,
+            "confirmation": str(transition.user_confirmation or False),
         }
 
         if transition.description:
-            values['description'] = transition.description
+            values["description"] = transition.description
 
         return values
