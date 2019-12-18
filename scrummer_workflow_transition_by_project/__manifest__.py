@@ -9,14 +9,8 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow_transition_by_project",
-        "scrummer",
-    ],
-
-    "data": [
-        "views/scrummer_workflow_security.xml",
-    ],
+    "depends": ["project_workflow_transition_by_project", "scrummer",],
+    "data": ["views/scrummer_workflow_security.xml",],
     "images": [],
     "installable": True,
 }
