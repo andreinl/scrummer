@@ -10,9 +10,7 @@
     "author": "Odoo Community Association (OCA), Modoolar",
     "website": "https://www.modoolar.com/",
     "depends": ["web"],
-    "data": [
-        "views/web_ir_actions_act_multi.xml",
-    ],
+    "data": ["views/web_ir_actions_act_multi.xml",],
     "images": [],
     "installable": True,
 }
