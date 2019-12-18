@@ -5,13 +5,13 @@ from odoo import models, fields, api, exceptions, _
 
 
 class Sprint(models.Model):
-    _name = 'project.agile.scrum.sprint'
-    _inherit = ['project.agile.mixin.id_search']
-    _order = 'state, start_date'
+    _name = "project.agile.scrum.sprint"
+    _inherit = ["project.agile.mixin.id_search"]
+    _order = "state, start_date"
 
     name = fields.Char(
-        default=lambda self: self.env['ir.sequence'].next_by_code(
-            'project_agile.sprint.sequence'
+        default=lambda self: self.env["ir.sequence"].next_by_code(
+            "project_agile.sprint.sequence"
         ),
     )
 
@@ -20,9 +20,7 @@ class Sprint(models.Model):
     end_date = fields.Datetime()
     actual_end_date = fields.Datetime()
 
-    total_story_points = fields.Integer(
-        compute="_compute_total_story_points",
-    )
+    total_story_points = fields.Integer(compute="_compute_total_story_points",)
 
     task_ids = fields.One2many(
         comodel_name="project.task",
@@ -32,69 +30,57 @@ class Sprint(models.Model):
     )
 
     team_id = fields.Many2one(
-        comodel_name='project.agile.team',
-        string='Agile Team',
-        required=True,
+        comodel_name="project.agile.team", string="Agile Team", required=True,
     )
 
     team_image_small = fields.Binary(
-        string='Team Image',
-        related='team_id.image_small'
+        string="Team Image", related="team_id.image_small"
     )
 
     state = fields.Selection(
         selection=[
-            ('draft', 'Draft'),
-            ('active', 'Active'),
-            ('completed', 'Completed')
+            ("draft", "Draft"),
+            ("active", "Active"),
+            ("completed", "Completed"),
         ],
         required=True,
-        default='draft',
+        default="draft",
     )
 
     velocity = fields.Integer(
-        string="Velocity",
-        compute="_compute_velocity",
-        store=True,
+        string="Velocity", compute="_compute_velocity", store=True,
     )
 
     task_count = fields.Integer(
-        string="Task count",
-        compute="_compute_task_count",
-        store=True,
+        string="Task count", compute="_compute_task_count", store=True,
     )
 
     order = fields.Float(required=False, default=1)
 
-    active = fields.Boolean(
-        string='Active?',
-        default=True,
-    )
+    active = fields.Boolean(string="Active?", default=True,)
 
     sprint_length_hrs = fields.Integer(
-        compute='_compute_length_hrs',
-        string='Sprint length(in hrs)',
-        store=True
+        compute="_compute_length_hrs",
+        string="Sprint length(in hrs)",
+        store=True,
     )
 
     sprint_length_days = fields.Integer(
-        compute='_compute_length_days',
-        string='Sprint length(in days)',
-        store=True
+        compute="_compute_length_days",
+        string="Sprint length(in days)",
+        store=True,
     )
 
     sprint_length_week = fields.Integer(
-        compute='_compute_length_week',
-        string='Sprint length(in weeks)',
+        compute="_compute_length_week", string="Sprint length(in weeks)",
     )
 
     default_hrs = fields.Float(
-        related='team_id.default_hrs',
-        string='Default daily hours'
+        related="team_id.default_hrs", string="Default daily hours"
     )
 
     @api.multi
-    @api.depends('task_ids', 'task_ids.story_points')
+    @api.depends("task_ids", "task_ids.story_points")
     def _compute_total_story_points(self):
         for record in self:
             record.total_story_points = sum(
@@ -102,7 +88,7 @@ class Sprint(models.Model):
             )
 
     @api.multi
-    @api.depends('task_ids', 'task_ids.story_points', 'state')
+    @api.depends("task_ids", "task_ids.story_points", "state")
     def _compute_velocity(self):
         for sprint in self:
             sprint.velocity = sum(
@@ -119,13 +105,13 @@ class Sprint(models.Model):
             record.task_count = len(record.task_ids)
 
     @api.multi
-    @api.depends('start_date', 'end_date')
+    @api.depends("start_date", "end_date")
     def _compute_length_week(self):
         for rec in self:
             rec.sprint_length_week = (rec.sprint_length_days + 1) / 7
 
     @api.multi
-    @api.depends('start_date', 'end_date')
+    @api.depends("start_date", "end_date")
     def _compute_length_days(self):
         for rec in self:
             if rec.start_date and rec.end_date:
@@ -136,7 +122,7 @@ class Sprint(models.Model):
                 rec.sprint_length_days = 0
 
     @api.multi
-    @api.depends('start_date', 'end_date')
+    @api.depends("start_date", "end_date")
     def _compute_length_hrs(self):
         for rec in self:
             days = float(rec.sprint_length_days)
@@ -145,16 +131,18 @@ class Sprint(models.Model):
             rec.sprint_length_hrs = hrs_int
 
     @api.model
-    @api.returns('self', lambda value: value.id)
+    @api.returns("self", lambda value: value.id)
     def create(self, vals):
         if not self.env.user.team_id:
-            raise exceptions.ValidationError(_(
-                "You have to be part of an agile team in order to "
-                "create a new sprint"
-            ))
+            raise exceptions.ValidationError(
+                _(
+                    "You have to be part of an agile team in order to "
+                    "create a new sprint"
+                )
+            )
 
-        if 'name' not in vals:
-            vals['name'] = "Sprint %s" % self.env.user.team_id.sprint_sequence
+        if "name" not in vals:
+            vals["name"] = "Sprint %s" % self.env.user.team_id.sprint_sequence
 
         self.env.user.team_id.sprint_sequence += 1
 

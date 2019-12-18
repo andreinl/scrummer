@@ -9,21 +9,15 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_agile",
-    ],
-
+    "depends": ["project_agile",],
     "data": [
-        'security/ir.model.access.csv',
-
+        "security/ir.model.access.csv",
         "views/project_agile_scrum_sprint_views.xml",
         "views/project_views.xml",
         "views/project_agile_team_views.xml",
-
         "views/menu.xml",
         "views/project_agile_board_views.xml",
     ],
-
     "demo": [],
     "qweb": [],
     "application": True,
