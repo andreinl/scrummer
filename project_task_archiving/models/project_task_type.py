@@ -6,12 +6,10 @@ from datetime import datetime, timedelta
 
 
 class Workflow(models.Model):
-    _inherit = 'project.task.type'
+    _inherit = "project.task.type"
 
     archive_days = fields.Integer(
-        string="Archive days",
-        required=True,
-        default=0
+        string="Archive days", required=True, default=0
     )
 
     @api.model
@@ -20,8 +18,12 @@ class Workflow(models.Model):
         for stage in self.search([]):
             if stage.archive_days > 0:
                 edge_date = fields.Datetime.to_string(
-                    datetime.now() - timedelta(stage.archive_days))
-                tasks = Task.search([
-                    ("stage_id", "=", stage.id),
-                    ("date_last_stage_update", "<", edge_date)])
+                    datetime.now() - timedelta(stage.archive_days)
+                )
+                tasks = Task.search(
+                    [
+                        ("stage_id", "=", stage.id),
+                        ("date_last_stage_update", "<", edge_date),
+                    ]
+                )
                 tasks.write({"active": False})
