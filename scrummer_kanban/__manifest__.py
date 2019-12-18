@@ -9,18 +9,9 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_agile_kanban",
-        "scrummer",
-    ],
-
-    "data": [
-        "views/scrummer_kanban.xml",
-    ],
-
+    "depends": ["project_agile_kanban", "scrummer",],
+    "data": ["views/scrummer_kanban.xml",],
     "demo": [],
-    "qweb": [
-        "static/src/xml/*.xml",
-    ],
+    "qweb": ["static/src/xml/*.xml",],
     "application": True,
 }
