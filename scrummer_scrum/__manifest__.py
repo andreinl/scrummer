@@ -9,19 +9,12 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_agile_scrum",
-        "scrummer",
-    ],
-
+    "depends": ["project_agile_scrum", "scrummer",],
     "data": [
         "views/scrummer_scrum.xml",
         "views/project_agile_scrum_sprint_views.xml",
     ],
-
     "demo": [],
-    "qweb": [
-        "static/src/xml/*.xml",
-    ],
+    "qweb": ["static/src/xml/*.xml",],
     "application": True,
 }

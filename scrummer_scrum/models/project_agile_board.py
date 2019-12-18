@@ -5,9 +5,8 @@ from odoo import models, fields
 
 
 class Board(models.Model):
-    _inherit = 'project.agile.board'
+    _inherit = "project.agile.board"
 
     scrum_backlog_state_ids = fields.Many2many(
-        comodel_name='project.workflow.state',
-        scrummer=True,
+        comodel_name="project.workflow.state", scrummer=True,
     )
