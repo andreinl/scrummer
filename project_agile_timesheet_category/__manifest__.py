@@ -3,7 +3,7 @@
 
 {
     "name": "Project Agile Timesheet Category",
-    "summary": "Extends project agile with timesheet category.",
+    "summary": "Extends project agile with timesheet category. Depends of Odoo enterprise.",
     "category": "Project",
     "version": "12.0.1.0.0",
     "license": "LGPL-3",

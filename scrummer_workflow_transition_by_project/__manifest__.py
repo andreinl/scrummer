@@ -10,7 +10,7 @@
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
     "depends": ["project_workflow_transition_by_project", "scrummer",],
-    "data": ["views/scrummer_workflow_security.xml",],
+    "data": ["views/scrummer_workflow_transition_by_project.xml",],
     "images": [],
     "installable": True,
 }

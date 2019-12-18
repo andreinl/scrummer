@@ -200,12 +200,7 @@ class TaskType(models.Model):
                 (
                     "id",
                     "in",
-                    [
-                        x[1]
-                        for x in self.env.context["selected_task_type_ids"][0][
-                            2
-                        ]
-                    ],
+                    self.env.context["selected_task_type_ids"][0][2],
                 )
             )
 

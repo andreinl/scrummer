@@ -34,7 +34,7 @@
     </template>
 
     <template id="portal_my_tasks_task_edit" inherit_id="project.portal_my_tasks" name="portal_my_tasks_task_edit">
-        <xpath expr="//h3" position="inside">
+        <xpath expr="//t[@t-call='portal.portal_searchbar']" position="inside">
             <button name='new_task' data-toggle="modal"
                     data-target=".modal_new_task" class="btn btn-default pull-right mr8"
                     groups="project_agile.group_project_portal_task_create">
@@ -42,19 +42,19 @@
             </button>
         </xpath>
 
-        <xpath expr="//div[@t-if='grouped_tasks']//thead//th[text() = 'Stage']" position="before">
-            <th>Type</th>
-            <th>Priority</th>
+        <xpath expr="//t[@t-if='grouped_tasks']//thead//th[text() = 'Stage']" position="before">
+            <th class="text-center">Type</th>
+            <th class="text-center">Priority</th>
         </xpath>
 
-        <xpath expr="//div[@t-if='grouped_tasks']//span[@t-field='task.name']" position="after">
-            <td>
+        <xpath expr="//t[@t-if='grouped_tasks']//span[@t-field='task.name']/../.." position="after">
+            <td class="text-center">
                 <img style="width: 20px; vertical-align: top; text-align: center;" t-if="task.type_id.icon"
                      t-att-src="'data:image/png;base64,%s' % to_text(task.type_id.icon)"
                      data-toggle="tooltip" data-placement="top" t-att-title="task.type_id.name"
                      data-delay='{"show":"0", "hide":"0"}'/>
             </td>
-            <td>
+            <td class="text-center">
                 <img style="width: 20px; vertical-align: top; text-align: center;" t-if="task.priority_id.icon"
                      t-att-src="'data:image/png;base64,%s' % to_text(task.priority_id.icon)"
                      data-toggle="tooltip" data-placement="top" t-att-title="task.priority_id.name"
@@ -62,7 +62,7 @@
             </td>
         </xpath>
 
-        <xpath expr="//h3" position="after">
+        <xpath expr="//t[@t-call='portal.portal_searchbar']" position="after">
             <div class="modal fade modal_new_task" role="form" aria-hidden="true" groups="project_agile.group_project_portal_task_edit">
                 <div class="modal-dialog">
                     <form method="POST" class="modal-content js_website_submit_form new_task_form">
@@ -89,28 +89,26 @@
                                 <input type='text' name="name" class="form-control name"/>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-6">
-                                    <label class="control-label" for="type">Type (*)</label>
-                                    <select class="form-control type" name="type">
-                                        <t t-foreach="types" t-as="type">
-                                            <option t-att-data="type.id"
-                                                    t-att-data-priorities="type.priority_ids.ids"
-                                                    t-att-data-default-priority="type.default_priority_id.id">
-                                                <t t-esc="type.name"/>
-                                            </option>
-                                        </t>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="control-label" for="priority">Priority (*)</label>
-                                    <select class="form-control priority" name="priority">
-                                        <t t-foreach="priorities" t-as="priority">
-                                            <option t-att-data="priority.id">
-                                                <t t-esc="priority.name"/>
-                                            </option>
-                                        </t>
-                                    </select>
-                                </div>
+                                <label class="control-label" for="type">Type (*)</label>
+                                <select class="form-control type" name="type">
+                                    <t t-foreach="types" t-as="type">
+                                        <option t-att-data="type.id"
+                                                t-att-data-priorities="type.priority_ids.ids"
+                                                t-att-data-default-priority="type.default_priority_id.id">
+                                            <t t-esc="type.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="priority">Priority (*)</label>
+                                <select class="form-control priority" name="priority">
+                                    <t t-foreach="priorities" t-as="priority">
+                                        <option t-att-data="priority.id">
+                                            <t t-esc="priority.name"/>
+                                        </option>
+                                    </t>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Deadline:</label>
@@ -138,8 +136,9 @@
             </div>
         </xpath>
     </template>
+
     <template id="portal_my_task_task_edit" inherit_id="project.portal_my_task" name="portal_my_task_task_edit">
-        <xpath expr="//div[hasclass('panel-body')]/div[hasclass('mb8')]" position="before">
+        <xpath expr="//t[@t-set='card_body']/div[hasclass('mb-1')]" position="before">
             <div class="row" groups="project_agile.group_project_portal_task_create,project_agile.group_project_portal_task_edit">
                 <div class="col-md-6">
                     <div>
@@ -161,31 +160,29 @@
                                             <input type='text' name="name" t-att-value="task.name" class="form-control name"/>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-6">
-                                                <label class="control-label" for="type">Type</label>
-                                                <select class="form-control type" name="type">
-                                                    <t t-foreach="types" t-as="type">
-                                                        <option t-if="type.id in task.project_id.type_id.task_type_ids.ids"
-                                                                t-att-data="type.id"
-                                                                t-att-data-priorities="type.priority_ids.ids"
-                                                                t-att-data-default-priority="type.default_priority_id.id"
-                                                                selected="true">
-                                                            <t t-esc="type.name"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="control-label" for="priority">Priority</label>
-                                                <select class="form-control priority" name="priority">
-                                                    <t t-foreach="priorities" t-as="priority">
-                                                        <option t-att-data="priority.id"
-                                                                t-att-selected="priority.id == task.priority_id.id">
-                                                            <t t-esc="priority.name"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
+                                            <label class="control-label" for="type">Type</label>
+                                            <select class="form-control type" name="type">
+                                                <t t-foreach="types" t-as="type">
+                                                    <option t-if="type.id in task.project_id.type_id.task_type_ids.ids"
+                                                            t-att-data="type.id"
+                                                            t-att-data-priorities="type.priority_ids.ids"
+                                                            t-att-data-default-priority="type.default_priority_id.id"
+                                                            selected="true">
+                                                        <t t-esc="type.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="priority">Priority</label>
+                                            <select class="form-control priority" name="priority">
+                                                <t t-foreach="priorities" t-as="priority">
+                                                    <option t-att-data="priority.id"
+                                                            t-att-selected="priority.id == task.priority_id.id">
+                                                        <t t-esc="priority.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label>Deadline:</label>
@@ -276,13 +273,13 @@
          </xpath>
     </template>
 
-    <template id="portal_my_task" name="My Task" inherit_id="project_workflow.portal_my_task">
+    <template id="portal_my_task_workflow" name="My Task workflow" inherit_id="project_workflow.portal_my_task">
         <xpath expr="//span[hasclass('wkf-transitions')]" position="attributes">
             <attribute name="groups">project_agile.group_project_portal_task_wkf</attribute>
         </xpath>
     </template>
 
-    <template id="portal_my_task" inherit_id="hr_timesheet.portal_my_task" name="Portal: My Task with imesheets">
+    <template id="portal_my_task" inherit_id="hr_timesheet.portal_my_task" name="Portal: My Task with timesheets">
         <xpath expr="//div[@t-if='task.timesheet_ids']" position="attributes">
             <attribute name="groups">project_agile.group_project_portal_task_timesheet</attribute>
         </xpath>

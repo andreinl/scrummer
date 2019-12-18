@@ -18,6 +18,9 @@
         "project_portal",
         "project_task_archiving",
     ],
+    "excludes": [
+        "project_category",
+    ],
     "data": [
         # security
         "security/security.xml",

@@ -435,7 +435,8 @@
                          t-att-title="record.type_id.value"
                          width="16"
                          height="16"
-                         class="oe_kanban_avatar pull-left"/>
+                         class="oe_kanban_avatar pull-left"
+                         alt="project_task_type2"/>
                 </div>
 
                 <div class="pull-left" t-if="record.priority_id.value">
@@ -443,7 +444,8 @@
                          t-att-title="record.priority_id.value"
                          width="16"
                          height="16"
-                         class="oe_kanban_avatar pull-left"/>
+                         class="oe_kanban_avatar pull-left"
+                         alt="project_task_priority"/>
                 </div>
             </xpath>
         </field>

@@ -5,7 +5,7 @@
 -->
 <odoo>
     <template id="portal_my_task" name="My Task" inherit_id="project.portal_my_task">
-        <xpath expr="//div[hasclass('panel-heading')]//h4" position="after">
+        <xpath expr="//span[@t-field='task.stage_id.name']" position="after">
             <span class="btn-group pull-right wkf-transitions" role="group">
                 <t t-foreach="transitions" t-as="tr">
                     <button type="button" t-att-data="tr['id']" t-att-task="task.id" t-attf-class="pull-right btn btn-sm task-transition-button btn-default">
