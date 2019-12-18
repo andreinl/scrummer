@@ -10,5 +10,5 @@ class ProjectProject(models.Model):
     repository_ids = fields.One2many(
         comodel_name="project.git.repository",
         string="Repositories",
-        inverse_name="project_id"
+        inverse_name="project_id",
     )

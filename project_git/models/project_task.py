@@ -12,16 +12,15 @@ class ProjectTask(models.Model):
         id1="task_id",
         id2="commit_id",
         relation="task_commit_rel",
-        string="Commits"
+        string="Commits",
     )
 
     commits_count = fields.Integer(
-        string="Commits Count",
-        compute="_compute_commits_count",
+        string="Commits Count", compute="_compute_commits_count",
     )
 
     @api.multi
-    @api.depends('commit_ids')
+    @api.depends("commit_ids")
     def _compute_commits_count(self):
         for record in self:
             record.commits_count = len(record.commit_ids)
@@ -29,8 +28,7 @@ class ProjectTask(models.Model):
     @api.multi
     def open_commits(self):
         action = self.env["ir.actions.act_window"].for_xml_id(
-            "project_git",
-            "action_git_commit",
+            "project_git", "action_git_commit",
         )
         action["domain"] = [("task_ids", "in", [self.id])]
         return action
