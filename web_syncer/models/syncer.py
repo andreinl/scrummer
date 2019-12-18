@@ -9,7 +9,7 @@ def is_module_installed(env, module_name):
 
 
 class Base(models.AbstractModel):
-    _inherit = 'base'
+    _inherit = "base"
 
     # Following attributes are here so that
     # we can accumulate changes of computed fields,
@@ -45,55 +45,62 @@ class Base(models.AbstractModel):
             if field.related:
                 cls._register_syncer_related_field(field)
 
-            elif field.type in ['one2many', 'many2many']:
+            elif field.type in ["one2many", "many2many"]:
                 cls._register_x2m_field(field)
 
     def _register_x2m_field(cls, field):
         model = {
-            'model': cls._name,
-            'field_name': field.name,
-            'type': field.type,
-            'attrs': field._attrs,
+            "model": cls._name,
+            "field_name": field.name,
+            "type": field.type,
+            "attrs": field._attrs,
         }
 
-        if field.type == 'one2many':
-            if field._attrs.get('syncer', False) and \
-                    isinstance(field._attrs['syncer'], (dict,)):
-                model['inverse_name'] = field._attrs['syncer']['inverse_names']
+        if field.type == "one2many":
+            if field._attrs.get("syncer", False) and isinstance(
+                field._attrs["syncer"], (dict,)
+            ):
+                model["inverse_name"] = field._attrs["syncer"]["inverse_names"]
             else:
-                model['inverse_name'] = [field.inverse_name]
-        elif field.type == 'many2many':
+                model["inverse_name"] = [field.inverse_name]
+        elif field.type == "many2many":
             comodel = cls.env[field.comodel_name]
 
             def field_filter(field_name):
                 f = comodel._fields[field_name]
-                return f.type == 'many2many' and f.comodel_name == cls._name
+                return f.type == "many2many" and f.comodel_name == cls._name
 
             # If there is no other side or there is more than one
             # then we can't process notifications
             inverse_field = list(filter(field_filter, comodel._fields))
             if len(inverse_field) == 0 or len(inverse_field) > 1:
                 return
-            model['inverse_field'] = inverse_field[0]
+            model["inverse_field"] = inverse_field[0]
 
         cls.env[field.comodel_name]._syncer_satellites.append(model)
 
     def _register_syncer_related_field(cls, field):
-        root = field.related.split('.')[0]
+        root = field.related.split(".")[0]
         names = cls._syncer_related_fields.get(root, [])
         names.append(field.name)
         cls._syncer_related_fields[root] = names
 
     @api.multi
     def _write(self, vals):
-        if is_module_installed(self.env, "web_syncer") and hasattr(self.env, 'syncer') and self._implements_syncer:
+        if (
+            is_module_installed(self.env, "web_syncer")
+            and hasattr(self.env, "syncer")
+            and self._implements_syncer
+        ):
             for record in self:
                 self.env.syncer.update(record, vals)
         return super(Base, self)._write(vals)
 
     @api.multi
     def write(self, vals):
-        if not is_module_installed(self.env, "web_syncer") or not hasattr(self.env, 'syncer'):
+        if not is_module_installed(self.env, "web_syncer") or not hasattr(
+            self.env, "syncer"
+        ):
             return super(Base, self).write(vals)
 
         # We always process m2x notifications
@@ -121,10 +128,12 @@ class Base(models.AbstractModel):
         return ret
 
     @api.model
-    @api.returns('self', lambda value: value.id)
+    @api.returns("self", lambda value: value.id)
     def create(self, vals):
         new = super(Base, self).create(vals)
-        if is_module_installed(self.env, 'web_syncer') and hasattr(self.env, 'syncer'):
+        if is_module_installed(self.env, "web_syncer") and hasattr(
+            self.env, "syncer"
+        ):
             self.env.syncer.begin(self)
 
             if new._implements_syncer:
@@ -139,8 +148,10 @@ class Base(models.AbstractModel):
 
     @api.multi
     def unlink(self):
-        if is_module_installed(self.env, "web_syncer") and \
-                self._implements_syncer:
+        if (
+            is_module_installed(self.env, "web_syncer")
+            and self._implements_syncer
+        ):
             for rec in self:
                 rec.push_unlink_notification()
         return super(Base, self).unlink()
@@ -150,21 +161,25 @@ class Base(models.AbstractModel):
             return
 
         def is_fake_one2many(fn):
-            return fn == 'res_id' and fn in self._fields and self._fields[fn].type == 'integer'
+            return (
+                fn == "res_id"
+                and fn in self._fields
+                and self._fields[fn].type == "integer"
+            )
 
         def is_fake_one2many_for_model(model, rec):
-            for field_name in ['res_model', 'model']:
+            for field_name in ["res_model", "model"]:
                 if field_name in rec and rec[field_name] == model:
                     return True
             return False
 
         for x2m_field in self._syncer_satellites:
-            model = x2m_field['model']
-            field_name = x2m_field['field_name']
+            model = x2m_field["model"]
+            field_name = x2m_field["field_name"]
 
-            if x2m_field['type'] == 'one2many':
+            if x2m_field["type"] == "one2many":
                 for rec in self:
-                    for inverse_name in x2m_field['inverse_name']:
+                    for inverse_name in x2m_field["inverse_name"]:
                         if not inverse_name:
                             continue
                         # Special case for fake one2many field
@@ -172,44 +187,54 @@ class Base(models.AbstractModel):
                         if is_fake_one2many(inverse_name):
                             if not is_fake_one2many_for_model(model, rec):
                                 continue
-                            record = self.env[model].browse(
-                                rec[inverse_name]
-                            ).sudo()
+                            record = (
+                                self.env[model]
+                                .browse(rec[inverse_name])
+                                .sudo()
+                            )
                         else:
                             record = rec[inverse_name].sudo()
                         if not record:
                             continue
-                        self.push_indirect_notification(model, record.id, {
-                            'method': 'write',
-                            'record_name': record.name_get()[0][1],
-                            'data': {field_name: record[field_name].ids},
-                        })
+                        self.push_indirect_notification(
+                            model,
+                            record.id,
+                            {
+                                "method": "write",
+                                "record_name": record.name_get()[0][1],
+                                "data": {field_name: record[field_name].ids},
+                            },
+                        )
 
-            elif x2m_field['type'] == 'many2many':
+            elif x2m_field["type"] == "many2many":
                 for rec in self:
-                    for record in rec[x2m_field['inverse_field']].sudo():
-                        self.push_indirect_notification(model, record.id, {
-                            'method': 'write',
-                            'record_name': record.name_get()[0][1],
-                            'data': {field_name: record[field_name].ids},
-                        })
+                    for record in rec[x2m_field["inverse_field"]].sudo():
+                        self.push_indirect_notification(
+                            model,
+                            record.id,
+                            {
+                                "method": "write",
+                                "record_name": record.name_get()[0][1],
+                                "data": {field_name: record[field_name].ids},
+                            },
+                        )
 
     def process_x2m_notifications_before_write(self, vals):
         for x2m_field in self._syncer_satellites:
-            if x2m_field['type'] != 'one2many':
+            if x2m_field["type"] != "one2many":
                 continue
 
             def is_fake_one2many(fn):
-                return self._fields[fn].type == 'integer' and fn == 'res_id'
+                return self._fields[fn].type == "integer" and fn == "res_id"
 
             def is_fake_one2many_for_model(model, rec):
-                for field_name in ['res_model', 'model']:
+                for field_name in ["res_model", "model"]:
                     if field_name in rec and rec[field_name] == model:
                         return True
                 return False
 
             processed = {}
-            for inverse_name in x2m_field['inverse_name']:
+            for inverse_name in x2m_field["inverse_name"]:
                 if inverse_name not in vals:
                     continue
 
@@ -217,15 +242,18 @@ class Base(models.AbstractModel):
                 if not record_id:
                     continue
 
-                model = x2m_field['model']
-                field_name = x2m_field['field_name']
+                model = x2m_field["model"]
+                field_name = x2m_field["field_name"]
 
                 if not isinstance(record_id, int):
                     record = record_id.sudo()
                 else:
-                    record = self.env[model].with_context(
-                        prefetch_fields=[field_name]
-                    ).browse(record_id).sudo()
+                    record = (
+                        self.env[model]
+                        .with_context(prefetch_fields=[field_name])
+                        .browse(record_id)
+                        .sudo()
+                    )
 
                 for rec in self:
 
@@ -234,9 +262,9 @@ class Base(models.AbstractModel):
                     if is_fake_one2many(inverse_name):
                         if not is_fake_one2many_for_model(model, rec):
                             continue
-                        original = self.env[model].browse(
-                            rec[inverse_name]
-                        ).sudo()
+                        original = (
+                            self.env[model].browse(rec[inverse_name]).sudo()
+                        )
                     else:
                         original = rec[inverse_name].sudo()
 
@@ -253,11 +281,15 @@ class Base(models.AbstractModel):
                             item[1].remove(rec.id)
 
                     for key, item in processed.items():
-                        self.push_indirect_notification(model, item[0].id, {
-                            'method': 'write',
-                            'record_name': item[0].name_get()[0][1],
-                            'data': {field_name: item[1]},
-                        })
+                        self.push_indirect_notification(
+                            model,
+                            item[0].id,
+                            {
+                                "method": "write",
+                                "record_name": item[0].name_get()[0][1],
+                                "data": {field_name: item[1]},
+                            },
+                        )
 
     def push_create_notification(self):
         self.push_record_notification("create", entire=True)
@@ -269,42 +301,52 @@ class Base(models.AbstractModel):
         self.push_record_notification("unlink", {}, entire=False)
 
         for x2m_field in self._syncer_satellites:
-            if x2m_field['type'] != 'one2many':
+            if x2m_field["type"] != "one2many":
                 continue
             processed = {}
 
-            for inverse_name in x2m_field['inverse_name']:
+            for inverse_name in x2m_field["inverse_name"]:
                 record = self[inverse_name]
                 if not record:
                     continue
-                model = x2m_field['model']
-                ids = record[x2m_field['field_name']].ids
+                model = x2m_field["model"]
+                ids = record[x2m_field["field_name"]].ids
                 key = (record.id, model)
 
                 item = processed.setdefault(key, [record, list(ids)])
                 item[1].remove(self.id)
 
             for key, item in processed.items():
-                self.push_indirect_notification(model, item[0].id, {
-                    'method': 'write',
-                    'record_name': item[0].name_get()[0][1],
-                    'data': {x2m_field['field_name']: item[1]},
-                })
+                self.push_indirect_notification(
+                    model,
+                    item[0].id,
+                    {
+                        "method": "write",
+                        "record_name": item[0].name_get()[0][1],
+                        "data": {x2m_field["field_name"]: item[1]},
+                    },
+                )
 
-    def push_record_notification(self, method, delta=False, entire=False,
-                                 indirect=False):
+    def push_record_notification(
+        self, method, delta=False, entire=False, indirect=False
+    ):
         self.ensure_one()
 
         entire = entire or self._sync_entire
-        self.push_notification(self._name, self.id, entire, indirect, {
-            "method": method,
-            "record_name": self.name,
-            "__last_update": self.write_date,
-            "data": self._format_values(
-                self,
-                entire and self.sudo().read()[0] or delta, not entire
-            ),
-        })
+        self.push_notification(
+            self._name,
+            self.id,
+            entire,
+            indirect,
+            {
+                "method": method,
+                "record_name": self.name,
+                "__last_update": self.write_date,
+                "data": self._format_values(
+                    self, entire and self.sudo().read()[0] or delta, not entire
+                ),
+            },
+        )
 
     def push_indirect_notification(self, res_model, res_id, message):
         self.push_notification(res_model, res_id, False, True, message)
@@ -313,24 +355,26 @@ class Base(models.AbstractModel):
         message.update(
             dict(indirect=indirect, entire=entire, user_id=self.prepare_user())
         )
-        self.env.syncer.push([
-            self.generate_channel_name(res_model),
-            self.prepare_sync_message(message, res_model, res_id)
-        ])
+        self.env.syncer.push(
+            [
+                self.generate_channel_name(res_model),
+                self.prepare_sync_message(message, res_model, res_id),
+            ]
+        )
 
     @api.model
     def prepare_user(self):
         return {
             "id": self.env.user.id,
             "name": self.env.user.name,
-            "__last_update": self.env.user.write_date
+            "__last_update": self.env.user.write_date,
         }
 
     @api.model
     def prepare_sync_message(self, message, res_model=None, record_id=None):
         return [
             (self._cr.dbname, res_model or self._name, record_id or self.id),
-            message
+            message,
         ]
 
     @api.model
@@ -362,14 +406,14 @@ class Base(models.AbstractModel):
         for fn in list(keys):
             f_type = record._fields[fn].type
 
-            if f_type == 'one2many':
+            if f_type == "one2many":
                 del ret_val[fn]
 
-            elif f_type == 'many2one':
+            elif f_type == "many2one":
                 value = single_record[fn]
                 ret_val[fn] = value and [value.id, value.name] or False
 
-            elif f_type == 'many2many':
+            elif f_type == "many2many":
                 value = single_record[fn]
                 ret_val[fn] = value and value.ids or []
         return ret_val

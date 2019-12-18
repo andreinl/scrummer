@@ -10,7 +10,5 @@
     "author": "Odoo Community Association (OCA), Modoolar",
     "website": "https://www.modoolar.com/",
     "depends": ["bus"],
-    "data": [
-        "views/web_syncer.xml",
-    ],
+    "data": ["views/web_syncer.xml",],
 }
