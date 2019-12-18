@@ -11,10 +11,8 @@
     "website": "https://www.modoolar.com/",
     "depends": ["project_agile"],
     "data": [
-
         # security
         "security/ir.model.access.csv",
-
         # View
         "views/project_agile_analytic_views.xml",
     ],
