@@ -10,33 +10,25 @@ TYPE = [("bitbucket", "BitBucket")]
 class GitUser(models.Model):
     _inherit = "project.git.user"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitRepository(models.Model):
     _inherit = "project.git.repository"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitCommit(models.Model):
     _inherit = "project.git.commit"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitBranch(models.Model):
     _inherit = "project.git.branch"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitPayloadParser(models.AbstractModel):
@@ -88,16 +80,14 @@ class GitPayloadParser(models.AbstractModel):
         return {
             "repository": self.parse_bitbucket_repository(context),
             "branches": self.parse_bitbucket_branches(context),
-            "sender": self.parse_bitbucket_sender(context)
+            "sender": self.parse_bitbucket_sender(context),
         }
 
     # -------------------------------------------
     # Action Delete
     # -------------------------------------------
     def parse_bitbucket_delete(self, context):
-        return {
-            "branches": self.parse_gitlab_branches(context, False)
-        }
+        return {"branches": self.parse_gitlab_branches(context, False)}
 
     # -------------------------------------------
     # Paring methods
@@ -114,7 +104,7 @@ class GitPayloadParser(models.AbstractModel):
             "name": branch["new"]["name"],
             "url": branch["new"]["links"]["html"]["href"],
             "type": context.type,
-            "repository_id": context.repository.id
+            "repository_id": context.repository.id,
         }
 
         if commits:
@@ -130,6 +120,7 @@ class GitPayloadParser(models.AbstractModel):
 
     def parse_bitbucket_commit(self, context, commit):
         from dateutil.parser import parse
+
         return {
             "name": commit["hash"][:8],
             "message": commit["message"],
