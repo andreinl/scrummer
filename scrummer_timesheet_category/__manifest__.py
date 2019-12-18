@@ -10,17 +10,9 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "scrummer",
-        "project_timesheet_category",
-    ],
-    "data": [
-        "views/assets.xml",
-    ],
-
+    "depends": ["scrummer", "project_timesheet_category",],
+    "data": ["views/assets.xml",],
     "demo": [],
-    "qweb": [
-        "static/src/xml/scrummer_timesheet.xml",
-    ],
-    "application": False
+    "qweb": ["static/src/xml/scrummer_timesheet.xml",],
+    "application": False,
 }
