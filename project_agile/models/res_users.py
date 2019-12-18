@@ -8,36 +8,36 @@ class Users(models.Model):
     _inherit = "res.users"
 
     team_ids = fields.Many2many(
-        comodel_name='project.agile.team',
-        relation='project_agile_team_member_rel',
-        column1='member_id',
-        column2='team_id',
-        string='Enroled in teams'
+        comodel_name="project.agile.team",
+        relation="project_agile_team_member_rel",
+        column1="member_id",
+        column2="team_id",
+        string="Enroled in teams",
     )
 
     team_id = fields.Many2one(
-        comodel_name="project.agile.team",
-        string="Current team",
+        comodel_name="project.agile.team", string="Current team",
     )
 
     @api.multi
     def write(self, vals):
         super(Users, self).write(vals)
-        if 'team_ids' in vals:
+        if "team_ids" in vals:
             self.fix_team_id()
-        if 'team_id' in vals:
+        if "team_id" in vals:
             self.invalidate_cache()
             self.env["ir.rule"].invalidate_cache()
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def name_search(self, name, args=None, operator="ilike", limit=100):
         if args is None:
             args = []
 
-        if 'filter_by_team_id' in self.env.context and \
-                self.env.context.get('filter_by_team_id', False):
-            args.append((
-                'team_ids', 'in', [self.env.context['filter_by_team_id']])
+        if "filter_by_team_id" in self.env.context and self.env.context.get(
+            "filter_by_team_id", False
+        ):
+            args.append(
+                ("team_ids", "in", [self.env.context["filter_by_team_id"]])
             )
 
         return super(Users, self).name_search(

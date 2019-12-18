@@ -12,16 +12,15 @@ _logger = logging.getLogger(__name__)
 
 
 class XmlAgileBoardReader(models.AbstractModel):
-    _name = 'project.agile.board.xml.reader'
-    _description = 'Agile Board Xml Reader'
+    _name = "project.agile.board.xml.reader"
+    _description = "Agile Board Xml Reader"
 
-    _rng_namespace = 'http://relaxng.org/ns/structure/1.0'
-    _rng_namespace_map = {'rng': 'http://relaxng.org/ns/structure/1.0'}
+    _rng_namespace = "http://relaxng.org/ns/structure/1.0"
+    _rng_namespace_map = {"rng": "http://relaxng.org/ns/structure/1.0"}
 
     def get_element_maker(self):
         return ElementMaker(
-            namespace=self._rng_namespace,
-            nsmap=self._rng_namespace_map,
+            namespace=self._rng_namespace, nsmap=self._rng_namespace_map,
         )
 
     def validate_schema(self, xml):
@@ -41,9 +40,9 @@ class XmlAgileBoardReader(models.AbstractModel):
                 _logger.error(error)
                 errors.append(error)
 
-            raise exceptions.ValidationError(_(
-                "Agile Board File Validation Error: %s"
-            ) % ",".join(errors))
+            raise exceptions.ValidationError(
+                _("Agile Board File Validation Error: %s") % ",".join(errors)
+            )
 
     def create_validator(self):
         """
@@ -71,7 +70,7 @@ class XmlAgileBoardReader(models.AbstractModel):
         return rng_etree
 
     def get_rng_file_path(self):
-        return os.path.join('project_agile', 'rng', 'board.rng')
+        return os.path.join("project_agile", "rng", "board.rng")
 
     def board_read(self, stream):
         """
@@ -98,29 +97,31 @@ class XmlAgileBoardReader(models.AbstractModel):
         :return:
         """
 
-        workflows = self.env['project.workflow'].search([
-            ('name', '=', board['workflow'])
-        ])
+        workflows = self.env["project.workflow"].search(
+            [("name", "=", board["workflow"])]
+        )
 
         workflow_count = len(workflows)
         if workflow_count == 0:
-            raise exceptions.ValidationError(_(
-                "Workflow with name '%s' could not be found in database"
-            ) % board['workflow'])
+            raise exceptions.ValidationError(
+                _("Workflow with name '%s' could not be found in database")
+                % board["workflow"]
+            )
 
         if workflow_count > 1:
-            raise exceptions.ValidationError(_(
-                "Found multiple instances of workflow with name '%s' "
-            ) % board['workflow'])
+            raise exceptions.ValidationError(
+                _("Found multiple instances of workflow with name '%s' ")
+                % board["workflow"]
+            )
 
         wkf_states = set([state.name for state in workflows.state_ids])
 
         counter = dict()
         multiples = []
         lost_and_found = set()
-        for column in board['columns']:
-            for status in column['statuses']:
-                status_name = status['wkf_state']
+        for column in board["columns"]:
+            for status in column["statuses"]:
+                status_name = status["wkf_state"]
                 counter[status_name] = counter.get(status_name, 0) + 1
                 if counter[status_name] > 1:
                     multiples.append(status_name)
@@ -131,15 +132,19 @@ class XmlAgileBoardReader(models.AbstractModel):
         error_messages = []
 
         if multiples:
-            error_messages.append(_(
-                "Following states: [%s] are assigned to multiple columns!"
-            ) % multiples)
+            error_messages.append(
+                _("Following states: [%s] are assigned to multiple columns!")
+                % multiples
+            )
 
         if lost_and_found:
-            error_messages.append(_(
-                "Following states [%] are referenced in the board but are not "
-                "found in the related workflow!"
-            ) % lost_and_found)
+            error_messages.append(
+                _(
+                    "Following states [%] are referenced in the board but are not "
+                    "found in the related workflow!"
+                )
+                % lost_and_found
+            )
 
         if error_messages:
             raise exceptions.ValidationError("\n".join(error_messages))
@@ -152,12 +157,12 @@ class XmlAgileBoardReader(models.AbstractModel):
         :return: Returns workflow dictionary.
         """
         return {
-            'name': self.read_string(element, 'name'),
-            'description': self.read_string(element, 'description'),
-            'type': self.read_string(element, 'type'),
-            'is_default': self.read_boolean(element, 'is_default'),
-            'columns': self.read_columns(element),
-            'workflow': self.read_string(element, 'workflow'),
+            "name": self.read_string(element, "name"),
+            "description": self.read_string(element, "description"),
+            "type": self.read_string(element, "type"),
+            "is_default": self.read_boolean(element, "is_default"),
+            "columns": self.read_columns(element),
+            "workflow": self.read_string(element, "workflow"),
         }
 
     def read_columns(self, element):
@@ -168,7 +173,7 @@ class XmlAgileBoardReader(models.AbstractModel):
         :return: Returns the list of the workflow states
         """
         columns = []
-        for e in element.iterfind('columns/column'):
+        for e in element.iterfind("columns/column"):
             columns.append(self.read_column(e))
         return columns
 
@@ -180,9 +185,9 @@ class XmlAgileBoardReader(models.AbstractModel):
         :return: Returns workflow state dictionary
         """
         return {
-            'name': self.read_string(element, 'name'),
-            'statuses': self.read_column_statuses(element),
-            'order': self.read_integer(element, 'sequence', default_value=10)
+            "name": self.read_string(element, "name"),
+            "statuses": self.read_column_statuses(element),
+            "order": self.read_integer(element, "sequence", default_value=10),
         }
 
     def read_column_statuses(self, element):
@@ -193,7 +198,7 @@ class XmlAgileBoardReader(models.AbstractModel):
         :return: Returns the list of the workflow transitions.
         """
         stauses = []
-        for e in element.iterfind('statuses/status'):
+        for e in element.iterfind("statuses/status"):
             stauses.append(self.read_status(e))
         return stauses
 
@@ -206,11 +211,11 @@ class XmlAgileBoardReader(models.AbstractModel):
         :return: Returns workflow transition dictionary.
         """
         return {
-            'wkf_state': self.read_string(element, 'wkf_state'),
-            'order': self.read_float(element, 'order'),
+            "wkf_state": self.read_string(element, "wkf_state"),
+            "order": self.read_float(element, "order"),
         }
 
-    def read_string(self, element, attribute_name, default_value=''):
+    def read_string(self, element, attribute_name, default_value=""):
         """
         Reads attribute of type ``string`` from the given xml element.
         :param element: The xml element from which the attribute value is read.
@@ -241,9 +246,9 @@ class XmlAgileBoardReader(models.AbstractModel):
         the attribute is not present within xml element.
         :return: Returns attribute value of type ``integer``.
         """
-        return float(self.read_attribute(
-            element, attribute_name, default_value
-        ))
+        return float(
+            self.read_attribute(element, attribute_name, default_value)
+        )
 
     def read_boolean(self, element, attribute_name, default_value=False):
         """
@@ -254,9 +259,9 @@ class XmlAgileBoardReader(models.AbstractModel):
         the attribute is not present within xml element.
         :return: Returns attribute value of type ``boolean``.
         """
-        return bool(self.read_attribute(
-            element, attribute_name, default_value
-        ))
+        return bool(
+            self.read_attribute(element, attribute_name, default_value)
+        )
 
     def read_attribute(self, element, name, default_value=None):
         """

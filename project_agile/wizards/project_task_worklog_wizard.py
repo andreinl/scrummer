@@ -5,36 +5,26 @@ from odoo import models, fields, api
 
 
 class ProjectTaskWorklogWizard(models.TransientModel):
-    _name = 'project.task.worklog.wizard'
+    _name = "project.task.worklog.wizard"
 
     task_id = fields.Many2one(
-        comodel_name='project.task',
-        string='Task',
-        required=True,
+        comodel_name="project.task", string="Task", required=True,
     )
 
     date = fields.Date(
-        string='Date',
-        required=True,
-        default=lambda *a: fields.Date.today(),
+        string="Date", required=True, default=lambda *a: fields.Date.today(),
     )
 
     user_id = fields.Many2one(
-        comodel_name='res.users',
-        string='User',
+        comodel_name="res.users",
+        string="User",
         required=True,
-        default=lambda s: s.env.user.id
+        default=lambda s: s.env.user.id,
     )
 
-    name = fields.Text(
-        string='Description',
-        required=True,
-    )
+    name = fields.Text(string="Description", required=True,)
 
-    duration = fields.Float(
-        string='Duration',
-        required=True,
-    )
+    duration = fields.Float(string="Duration", required=True,)
 
     @api.multi
     def button_submit_worklog(self):
@@ -44,9 +34,9 @@ class ProjectTaskWorklogWizard(models.TransientModel):
 
     def _prepare_worklog(self):
         return {
-            'project_id': self.task_id.project_id.id or False,
-            'date': self.date,
-            'user_id': self.user_id.id,
-            'name': self.name,
-            'unit_amount': self.duration,
+            "project_id": self.task_id.project_id.id or False,
+            "date": self.date,
+            "user_id": self.user_id.id,
+            "name": self.name,
+            "unit_amount": self.duration,
         }

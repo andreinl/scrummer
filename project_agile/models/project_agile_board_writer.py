@@ -4,12 +4,12 @@ from lxml import etree
 from odoo import models
 
 
-DEFAULT_ENCODING = 'utf-8'
+DEFAULT_ENCODING = "utf-8"
 
 
 class XmlAgileBoardWriter(models.AbstractModel):
-    _name = 'project.agile.board.xml.writer'
-    _description = 'Xml agile board xml writer'
+    _name = "project.agile.board.xml.writer"
+    _description = "Xml agile board xml writer"
 
     def board_write(self, board, stream, encoding=DEFAULT_ENCODING):
         """
@@ -37,7 +37,9 @@ class XmlAgileBoardWriter(models.AbstractModel):
         """
         return etree.tostring(
             self._get_xml(board),
-            encoding=self.encoding, xml_declaration=True, pretty_print=True
+            encoding=self.encoding,
+            xml_declaration=True,
+            pretty_print=True,
         )
 
     def _build_xml(self, board, element_tree=False):
@@ -68,7 +70,7 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns a new root workflow xml element.
         """
         attributes = self.prepare_board_attributes(board)
-        return etree.Element('agile-board', attributes)
+        return etree.Element("agile-board", attributes)
 
     def prepare_board_attributes(self, board):
         """
@@ -77,12 +79,12 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns dictionary with attribute values.
         """
         return {
-            'name': board.name,
-            'description': board.description or '',
-            'type': board.type,
-            'workflow': board.workflow_id.name,
-            'is_default': str(board.is_default),
-            'task_types': ",".join([x.name for x in board.task_type_ids])
+            "name": board.name,
+            "description": board.description or "",
+            "type": board.type,
+            "workflow": board.workflow_id.name,
+            "is_default": str(board.is_default),
+            "task_types": ",".join([x.name for x in board.task_type_ids]),
         }
 
     def create_columns_element(self, parent, board):
@@ -93,7 +95,7 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns a new state xml element.
         """
         attributes = self.prepare_columns_attributes(board)
-        return etree.SubElement(parent, 'columns', attributes)
+        return etree.SubElement(parent, "columns", attributes)
 
     def prepare_columns_attributes(self, board):
         """
@@ -113,7 +115,7 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns a new state xml element.
         """
         attributes = self.prepare_column_attributes(column)
-        columnElement = etree.SubElement(parent, 'column', attributes)
+        columnElement = etree.SubElement(parent, "column", attributes)
         return columnElement
 
     def prepare_column_attributes(self, column):
@@ -123,8 +125,8 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns dictionary with attribute values.
         """
         values = {
-            'name': column.name,
-            'order': str(column.order),
+            "name": column.name,
+            "order": str(column.order),
         }
 
         return values
@@ -137,7 +139,7 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns a new transition xml element.
         """
         attributes = self.prepare_statuses_attributes(column)
-        return etree.SubElement(parent, 'statuses', attributes)
+        return etree.SubElement(parent, "statuses", attributes)
 
     def prepare_statuses_attributes(self, column):
         """
@@ -157,7 +159,7 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns a new transition xml element.
         """
         values = self.prepare_status_attributes(status)
-        return etree.SubElement(parent, 'status', values)
+        return etree.SubElement(parent, "status", values)
 
     def prepare_status_attributes(self, status):
         """
@@ -165,8 +167,8 @@ class XmlAgileBoardWriter(models.AbstractModel):
         :return: Returns dictionary with attribute values.
         """
         values = {
-            'wkf_state': status.name,
-            'order': str(status.order),
+            "wkf_state": status.name,
+            "order": str(status.order),
         }
 
         return values

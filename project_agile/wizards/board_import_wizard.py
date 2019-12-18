@@ -8,12 +8,9 @@ from odoo import models, fields, api
 
 
 class BoardImportWizard(models.TransientModel):
-    _name = 'project.agile.board.import.wizard'
+    _name = "project.agile.board.import.wizard"
 
-    data = fields.Binary(
-        string='Data',
-        required=True,
-    )
+    data = fields.Binary(string="Data", required=True,)
 
     @api.multi
     def button_import(self):
@@ -25,15 +22,15 @@ class BoardImportWizard(models.TransientModel):
         stream.close()
 
         return {
-            'type': 'ir.actions.act_multi',
-            'actions': [
-                {'type': 'ir.actions.act_window_close'},
-                {'type': 'ir.actions.act_view_reload'},
-            ]
+            "type": "ir.actions.act_multi",
+            "actions": [
+                {"type": "ir.actions.act_window_close"},
+                {"type": "ir.actions.act_view_reload"},
+            ],
         }
 
     def get_board_importer(self):
-        return self.env['project.agile.board.importer']
+        return self.env["project.agile.board.importer"]
 
     def get_board_xml_reader(self):
-        return self.env['project.agile.board.xml.reader']
+        return self.env["project.agile.board.xml.reader"]

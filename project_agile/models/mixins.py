@@ -8,11 +8,18 @@ _logger = logging.getLogger(__name__)
 
 
 class IdSearchMixin(models.AbstractModel):
-    _name = 'project.agile.mixin.id_search'
+    _name = "project.agile.mixin.id_search"
 
     @api.model
-    def id_search(self, name='', args=None, context=None, operator='ilike',
-                  limit=100, order=None):
+    def id_search(
+        self,
+        name="",
+        args=None,
+        context=None,
+        operator="ilike",
+        limit=100,
+        order=None,
+    ):
         """ Works exactly like name_search,
         except that returns only Array of ids, without names
         """
@@ -22,8 +29,15 @@ class IdSearchMixin(models.AbstractModel):
         return self._id_search(name, args, operator, limit, order)
 
     @api.model
-    def _id_search(self, name='', args=None, operator='ilike',
-                   limit=100, order=None, name_get_uid=None):
+    def _id_search(
+        self,
+        name="",
+        args=None,
+        operator="ilike",
+        limit=100,
+        order=None,
+        name_get_uid=None,
+    ):
 
         # private implementation of id_search, allows passing a dedicated user
         # for the name_get part to solve some access rights issues
@@ -34,10 +48,10 @@ class IdSearchMixin(models.AbstractModel):
         if not self._rec_name:
             _logger.warning(
                 "Cannot execute name_search, no _rec_name defined on %s",
-                self._name
+                self._name,
             )
 
-        elif not (name == '' and operator == 'ilike'):
+        elif not (name == "" and operator == "ilike"):
             args += [(self._rec_name, operator, name)]
 
         return self.search(args, order=order).ids

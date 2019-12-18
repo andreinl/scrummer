@@ -5,31 +5,23 @@ from odoo import models, fields, api, tools
 
 
 class AgileTeam(models.Model):
-    _name = 'project.agile.team'
-    _inherit = ['mail.thread']
+    _name = "project.agile.team"
+    _inherit = ["mail.thread"]
 
-    name = fields.Char(
-        string='Name',
-    )
+    name = fields.Char(string="Name",)
 
-    description = fields.Html(
-        string='Description',
-    )
+    description = fields.Html(string="Description",)
 
-    type = fields.Selection(
-        selection=[],
-    )
+    type = fields.Selection(selection=[],)
 
-    email = fields.Char(
-        string='E-mail',
-    )
+    email = fields.Char(string="E-mail",)
 
     member_ids = fields.Many2many(
-        comodel_name='res.users',
-        relation='project_agile_team_member_rel',
-        column1='team_id',
-        column2='member_id',
-        string='Scrum Members',
+        comodel_name="res.users",
+        relation="project_agile_team_member_rel",
+        column1="team_id",
+        column2="member_id",
+        string="Scrum Members",
     )
 
     project_ids = fields.Many2many(
@@ -41,18 +33,15 @@ class AgileTeam(models.Model):
     )
 
     product_owner_ids = fields.One2many(
-        comodel_name='res.users',
-        string='Product Owner',
+        comodel_name="res.users",
+        string="Product Owner",
         compute="_compute_product_owner_ids",
     )
 
-    default_hrs = fields.Float(
-        string='Default daily hours',
-        default=8,
-    )
+    default_hrs = fields.Float(string="Default daily hours", default=8,)
 
     report_ids = fields.One2many(
-        comodel_name='project.agile.team.report',
+        comodel_name="project.agile.team.report",
         compute="_compute_report_ids",
     )
 
@@ -61,30 +50,30 @@ class AgileTeam(models.Model):
         "Image",
         attachment=True,
         help="This field holds the image used as image for the agile team, "
-             "limited to 1024x1024px."
+        "limited to 1024x1024px.",
     )
 
     image_medium = fields.Binary(
         "Medium-sized image",
-        compute='_compute_images',
-        inverse='_inverse_image_medium',
+        compute="_compute_images",
+        inverse="_inverse_image_medium",
         store=True,
         attachment=True,
         help="Medium-sized image of the agile team. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved, "
-             "only when the image exceeds one of those sizes. "
-             "Use this field in form views or some kanban views."
+        "resized as a 128x128px image, with aspect ratio preserved, "
+        "only when the image exceeds one of those sizes. "
+        "Use this field in form views or some kanban views.",
     )
 
     image_small = fields.Binary(
         "Small-sized image",
-        compute='_compute_images',
-        inverse='_inverse_image_small',
+        compute="_compute_images",
+        inverse="_inverse_image_small",
         store=True,
         attachment=True,
         help="Small-sized image of the agile team. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required."
+        "resized as a 64x64px image, with aspect ratio preserved. "
+        "Use this field anywhere a small image is required.",
     )
 
     @api.multi
@@ -96,11 +85,14 @@ class AgileTeam(models.Model):
     @api.multi
     def _compute_report_ids(self):
         for rec in self:
-            rec.report_ids = self.env['project.agile.team.report'].search([
-                ('type', '=', rec.type)
-            ]).ids or []
+            rec.report_ids = (
+                self.env["project.agile.team.report"]
+                .search([("type", "=", rec.type)])
+                .ids
+                or []
+            )
 
-    @api.depends('image')
+    @api.depends("image")
     def _compute_images(self):
         for rec in self:
             rec.image_medium = tools.image_resize_image_medium(
@@ -127,7 +119,7 @@ class AgileTeam(models.Model):
         res = super(AgileTeam, self).write(vals)
 
         # Set default team for users without one
-        if 'member_ids' in vals:
+        if "member_ids" in vals:
             self.mapped("member_ids").filtered(
                 lambda x: not x.team_id
             ).fix_team_id()
