@@ -9,15 +9,10 @@ class Users(models.Model):
 
     name = fields.Char(scrummer=True)
     write_date = fields.Datetime(scrummer=True)
-    partner_id = fields.Many2one(
-        comodel_name='res.partner',
-        scrummer=True
-    )
+    partner_id = fields.Many2one(comodel_name="res.partner", scrummer=True)
     team_ids = fields.Many2many(
-        comodel_name='project.agile.team',
-        scrummer=True,
+        comodel_name="project.agile.team", scrummer=True,
     )
     team_id = fields.Many2one(
-        comodel_name="project.agile.team",
-        scrummer=True,
+        comodel_name="project.agile.team", scrummer=True,
     )

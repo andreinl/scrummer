@@ -5,8 +5,8 @@ from odoo import models, fields, api
 
 
 class MailMessageSubtype(models.Model):
-    _name = 'mail.message.subtype'
-    _inherit = ['mail.message.subtype', 'project.agile.mixin.id_search']
+    _name = "mail.message.subtype"
+    _inherit = ["mail.message.subtype", "project.agile.mixin.id_search"]
 
     name = fields.Char(scrummer=True)
     default = fields.Boolean(scrummer=True)
@@ -17,8 +17,7 @@ class Message(models.Model):
     _inherit = "mail.message"
 
     author_last_update = fields.Datetime(
-        related='create_uid.__last_update',
-        scrummer=True
+        related="create_uid.__last_update", scrummer=True
     )
 
     @api.model
@@ -29,9 +28,11 @@ class Message(models.Model):
 
         if self.env.context.get("scrummer", False):
             for message_dict in messages:
-                message = message_tree[message_dict.get('id')]
-                message_dict.update({
-                    'author_last_update': message.author_last_update,
-                    'write_date': message.write_date,
-                })
+                message = message_tree[message_dict.get("id")]
+                message_dict.update(
+                    {
+                        "author_last_update": message.author_last_update,
+                        "write_date": message.write_date,
+                    }
+                )
         return ret
