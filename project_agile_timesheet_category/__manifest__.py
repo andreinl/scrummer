@@ -14,12 +14,10 @@
         "project_timesheet_category",
         "timesheet_grid",
     ],
-
     "data": [
         "views/timesheet.xml",
         "wizards/project_task_worklog_wizard.xml",
     ],
-
     "demo": [],
     "qweb": [],
     "application": False,
