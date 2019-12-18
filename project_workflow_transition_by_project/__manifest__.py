@@ -4,22 +4,15 @@
 {
     "name": "Project Workflow Transition by Project",
     "summary": "This module extends ``project_workflow`` in order to provide "
-               "transition constraints based on project.",
+    "transition constraints based on project.",
     "category": "Project",
     "version": "11.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow",
-    ],
-    "data": [
-        "views/project_workflow_views.xml",
-    ],
-
+    "depends": ["project_workflow",],
+    "data": ["views/project_workflow_views.xml",],
     "demo": [],
-    "qweb": [
-
-    ],
+    "qweb": [],
     "application": False,
 }
