@@ -8,9 +8,7 @@
     "license": "LGPL-3",
     "author": "Odoo Community Association (OCA), Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow"
-    ],
+    "depends": ["project_workflow"],
     "data": [
         "security/ir.model.access.csv",
         "views/project_workflow_views.xml",

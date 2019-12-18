@@ -5,7 +5,7 @@ from odoo import models, api
 
 
 class Task(models.Model):
-    _inherit = 'project.task'
+    _inherit = "project.task"
 
     @api.cr_uid_context
     def _get_default_stage_id(self):
@@ -14,12 +14,16 @@ class Task(models.Model):
             return False
 
         project_id = self.env.context.get(
-            'default_project_id', self.env.context.get('project_id')
+            "default_project_id", self.env.context.get("project_id")
         )
 
-        project = self.env['project.project'].browse(project_id)
-        if project and project.allow_workflow and project.workflow_id and \
-                project.workflow_id.default_state_ids:
+        project = self.env["project.project"].browse(project_id)
+        if (
+            project
+            and project.allow_workflow
+            and project.workflow_id
+            and project.workflow_id.default_state_ids
+        ):
 
             for default_state in project.workflow_id.default_state_ids:
                 if default_state.group_id in self.env.user.groups_id:
