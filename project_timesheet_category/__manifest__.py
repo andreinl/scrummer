@@ -9,10 +9,7 @@
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project",
-        "hr_timesheet",
-    ],
+    "depends": ["project", "hr_timesheet",],
     "data": [
         "security/ir.model.access.csv",
         "security/security.xml",
@@ -23,10 +20,7 @@
         "views/project_task.xml",
         "views/res_users.xml",
     ],
-
     "demo": [],
-    "qweb": [
-        "static/src/xml/project_timesheet.xml",
-    ],
-    "application": False
+    "qweb": ["static/src/xml/project_timesheet.xml",],
+    "application": False,
 }
