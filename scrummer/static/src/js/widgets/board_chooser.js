@@ -38,6 +38,9 @@ odoo.define('scrummer.board_chooser', function (require) {
                 // If current_project is set, fetch it and store so that it can be used in synchronous project_image_url method
                 this.current_project && DataServiceFactory.get("project.project").getRecord(this.current_project).then(project => {
                     this.project = project;
+                    // TODO project.name not works properly
+                    // console.info(project);
+                    // console.info(project.name);
                 })
             ).then(() => {
                 let board_service = DataServiceFactory.get("project.agile.board");
