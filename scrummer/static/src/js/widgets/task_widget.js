@@ -64,6 +64,13 @@ odoo.define('scrummer.widget.task', function (require) {
         template: "scrummer.task",
         menuItems: [
             {
+                class: "open-in-project",
+                icon: "mdi-briefcase",
+                text: _t("Open in project"),
+                callback: '_onOpenInProject',
+                sequence: 0,
+            },
+            {
                 class: "assign-to-me",
                 icon: "mdi-account-check",
                 text: _t("Assign To Me"),
@@ -406,6 +413,10 @@ odoo.define('scrummer.widget.task', function (require) {
         },
         removeParent() {
             this.$(".parent-key").hide();
+        },
+        _onOpenInProject() {
+            var newUrl = "http://" + window.location.host + "/web?#id=" + this._model.id + "&model=project.task&view_type=form";
+            window.location.href = newUrl;
         },
         _onAssignToMeClick() {
             this._model.user_id = data.session.uid;
