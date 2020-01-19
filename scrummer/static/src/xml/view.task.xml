@@ -97,7 +97,7 @@
                                         </td>
                                     </tr>
                                     <tr data-field-name="create_uid">
-                                        <td class="field_label">Reporeted by</td>
+                                        <td class="field_label">Reported by</td>
                                         <td data-field="create_uid">
                                             <span class="field_value"><t t-esc="widget._model.create_uid[1]"/></span>
                                         </td>

@@ -288,16 +288,30 @@ odoo.define('scrummer.widget.modal', function (require) {
                     thisModal.projectChanged();
                 },
                 // Default project in following order of priority: 1. From edit object; 2. from parent; 3. from defaults object;
+                // default: this.edit && this.edit.project_id ? {
+                //         id: this.edit.project_id[0],
+                //         name: this.edit.project_id[1]
+                //     } :
+                //     this.parent && this.parent.project_id ? {
+                //             id: this.parent.project_id[0],
+                //             name: this.parent.project_id[1]
+                //         } :
+                //         this.defaults && this.defaults.project ? this.defaults.project : undefined
+                // TODO the defaults object is not working and create and error on server
                 default: this.edit && this.edit.project_id ? {
-                        id: this.edit.project_id[0],
-                        name: this.edit.project_id[1]
-                    } :
-                    this.parent && this.parent.project_id ? {
-                            id: this.parent.project_id[0],
-                            name: this.parent.project_id[1]
-                        } :
-                        this.defaults && this.defaults.project ? this.defaults.project : undefined
+                      id: this.edit.project_id[0],
+                      name: this.edit.project_id[1]
+                  } :
+                  this.parent && this.parent.project_id ? {
+                      id: this.parent.project_id[0],
+                      name: this.parent.project_id[1]
+                  } : undefined
             });
+            // console.debug(this.parent);
+            // console.debug(this.edit);
+            // console.debug(this.defaults);
+            // console.debug(this.defaults.project);
+
             this.projectMany2one.insertBefore(this.$("select[name='type_id']").closest(".input-field"));
             let tagsOptions = {
                 comodel: "project.tags",
