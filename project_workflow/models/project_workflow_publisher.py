@@ -39,6 +39,7 @@ class PublisherResult(object):
 
 class ProjectWorkflowPublisher(models.AbstractModel):
     _name = "project.workflow.publisher"
+    _description = "Project Workflow Publisher"
 
     def publish(self, old, new, mappings=None, project_id=None, switch=False):
         if not new:

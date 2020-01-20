@@ -6,6 +6,7 @@ from odoo import models, fields, api
 
 class TimesheetCategory(models.Model):
     _name = "project.timesheet.category"
+    _description = "Project Timesheet Category"
     _order = "name"
 
     name = fields.Char(string="Name", required=True)

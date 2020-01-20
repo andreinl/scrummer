@@ -6,6 +6,7 @@ from odoo import models, fields, api
 
 class WorkflowMappingWizard(models.TransientModel):
     _name = "project.workflow.stage.mapping.wizard"
+    _description = "Project Workflow Stage Mapping Wizard"
 
     def _default_from_diagram(self):
         return self.env.context.get("default_from_diagram", False)
@@ -69,6 +70,7 @@ class WorkflowMappingWizard(models.TransientModel):
 
 class WorkflowMappingWizardLine(models.TransientModel):
     _name = "project.workflow.stage.mapping.wizard.line"
+    _description = "Project Workflow Stage Mapping Wizard Line"
 
     wizard_id = fields.Many2one(
         comodel_name="project.workflow.stage.mapping.wizard",
@@ -113,6 +115,7 @@ class WorkflowMappingWizardLine(models.TransientModel):
 
 class WorkflowMappingWizardStage(models.TransientModel):
     _name = "project.workflow.stage.mapping.wizard.stage"
+    _description = "Project Workflow Stage Mapping Wizard Stage"
 
     wizard_id = fields.Many2one(
         comodel_name="project.workflow.stage.mapping.wizard",

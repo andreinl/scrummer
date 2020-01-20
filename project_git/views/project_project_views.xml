@@ -28,7 +28,7 @@
                                         </div>
                                         <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                         <div class="o_kanban_image">
-                                            <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                            <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox" alt="avatar"/>
                                         </div>
                                         <div class="oe_kanban_details">
                                             <div>

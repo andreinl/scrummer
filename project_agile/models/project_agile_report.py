@@ -6,6 +6,7 @@ from odoo import models, fields
 
 class AgileReport(models.AbstractModel):
     _name = "project.agile.report"
+    _description = "Project Agile Report"
 
     name = fields.Char(required=True)
     description = fields.Html(required=True)
@@ -18,9 +19,11 @@ class AgileReport(models.AbstractModel):
 
 class AgileTeamReport(models.Model):
     _name = "project.agile.team.report"
+    _description = "Project Agile Team Report"
     _inherit = "project.agile.report"
 
 
 class AgileBoardReport(models.Model):
     _name = "project.agile.board.report"
+    _description = "Project Agile Board Report"
     _inherit = "project.agile.report"

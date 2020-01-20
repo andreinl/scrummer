@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 
 class WorkflowImporter(models.AbstractModel):
     _name = "project.workflow.importer"
+    _description = "Project Workflow Importer"
 
     def _load_task_stages(self):
         """

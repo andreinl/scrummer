@@ -5,6 +5,7 @@ from odoo import models, exceptions, _
 
 class GitPayloadParser(models.AbstractModel):
     _name = "project.git.payload.parser"
+    _description = "Project Git Payload Parser"
 
     def parse_header(self, context):
         parse_method_name = "parse_%s_header" % context.type

@@ -6,6 +6,7 @@ from odoo import models, fields, api
 
 class BoardCreateWizard(models.TransientModel):
     _name = "project.agile.board.create.wizard"
+    _description = "Project Agile Board Create Wizard"
 
     name = fields.Char(string="Name", required=True)
 

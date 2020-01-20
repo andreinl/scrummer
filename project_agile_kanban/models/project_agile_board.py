@@ -31,6 +31,7 @@ class ProjectAgileBoard(models.Model):
 
 class BacklogColumnStatus(models.Model):
     _name = "project.agile.board.kanban.backlog.column.status"
+    _description = "Project Agile Board Kanban Backlog Column Status"
 
     board_id = fields.Many2one(
         comodel_name="project.agile.board",
@@ -83,6 +84,7 @@ class BacklogColumnStatus(models.Model):
 
 class BacklogStates(models.Model):
     _name = "project.agile.board.kanban.backlog.state"
+    _description = "Project Agile Board Kanban Backlog State"
 
     board_id = fields.Many2one(
         comodel_name="project.agile.board",

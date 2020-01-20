@@ -9,6 +9,7 @@ from odoo import models, fields, api
 
 class WorkflowImportWizard(models.TransientModel):
     _name = "project.workflow.import.wizard"
+    _description = "Workflow Import Wizard"
 
     data = fields.Binary(string="Data", required=True,)
 

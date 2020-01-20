@@ -21,6 +21,7 @@ except (ImportError, IOError) as err:
 
 class JiraWorker(models.AbstractModel):
     _name = "project.agile.jira.worker"
+    _description = "Project Agile Jira Worker"
 
     @contextmanager
     def session(self):

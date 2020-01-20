@@ -6,6 +6,7 @@ from odoo import models, fields, api, tools, _
 
 class ProjectType(models.Model):
     _name = "project.type"
+    _description = "Project Type"
     _inherit = ["project.agile.code_item"]
 
     stage_ids = fields.Many2many(

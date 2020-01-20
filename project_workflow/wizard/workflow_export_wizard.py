@@ -11,6 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class WorkflowImportWizard(models.TransientModel):
     _name = "project.workflow.export.wizard"
+    _description = "Project Workflow Export Wizard"
 
     workflow_id = fields.Many2one(
         comodel_name="project.workflow",

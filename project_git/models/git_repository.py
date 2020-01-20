@@ -11,6 +11,7 @@ from ..utils.utils import get_image_type, get_avatar, urljoin
 
 class GitRepository(models.Model):
     _name = "project.git.repository"
+    _description = "Project Git Repository"
 
     def _default_secret(self):
         alphabet = string.ascii_letters + string.digits

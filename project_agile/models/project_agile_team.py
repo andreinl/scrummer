@@ -6,6 +6,7 @@ from odoo import models, fields, api, tools
 
 class AgileTeam(models.Model):
     _name = "project.agile.team"
+    _description = "Project Agile Team"
     _inherit = ["mail.thread"]
 
     name = fields.Char(string="Name",)

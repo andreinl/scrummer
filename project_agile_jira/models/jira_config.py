@@ -15,6 +15,7 @@ except (ImportError, IOError) as err:
 
 class JiraConfig(models.Model):
     _name = "project.agile.jira.config"
+    _description = "Project Agile Jira Config"
 
     name = fields.Char(string="Name", help="Config Name")
 

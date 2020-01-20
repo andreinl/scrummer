@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 class XmlWorkflowReader(models.AbstractModel):
     _name = "project.workflow.xml.reader"
+    _description = "Project Workflow XML Reader"
 
     _rng_namespace = "http://relaxng.org/ns/structure/1.0"
     _rng_namespace_map = {"rng": "http://relaxng.org/ns/structure/1.0"}
@@ -262,6 +263,7 @@ DEFAULT_ENCODING = "utf-8"
 
 class XmlWorkflowWriter(models.AbstractModel):
     _name = "project.workflow.xml.writer"
+    _description = "Project Workflow XML Writer"
 
     def wkf_write(self, workflow, stream, encoding=DEFAULT_ENCODING):
         """

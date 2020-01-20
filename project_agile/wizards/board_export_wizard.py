@@ -8,6 +8,7 @@ from odoo import models, fields, api
 
 class BoardExportWizard(models.TransientModel):
     _name = "project.agile.board.export.wizard"
+    _description = "Project Agile Board Export Wizard"
 
     board_id = fields.Many2one(
         comodel_name="project.agile.board", string="Agile Board",

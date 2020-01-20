@@ -7,6 +7,7 @@ from ..utils.utils import get_image_type, get_avatar
 
 class GitBranch(models.Model):
     _name = "project.git.branch"
+    _description = "Project Git Branch"
 
     name = fields.Char(string="Name", size=256, required=True, index=True,)
 

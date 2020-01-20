@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 
 class IdSearchMixin(models.AbstractModel):
     _name = "project.agile.mixin.id_search"
+    _description = "Project Agile Mixin Id Search"
 
     @api.model
     def id_search(

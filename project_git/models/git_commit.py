@@ -7,6 +7,7 @@ from ..utils.utils import get_image_type, get_avatar
 
 class GitCommit(models.Model):
     _name = "project.git.commit"
+    _description = "Project Git Commit"
 
     name = fields.Char(string="Name", size=256, required=True, index=True,)
 

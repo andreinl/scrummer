@@ -28,6 +28,7 @@ JOB_TYPE = [
 
 class JiraRequest(models.Model):
     _name = "project.agile.jira.request"
+    _description = "Project Agile Jira Request"
 
     state = fields.Selection(
         selection=REQUEST_STATES,
@@ -125,6 +126,7 @@ LOG_TYPES = [
 
 class JiraRequestLog(models.Model):
     _name = "project.agile.jira.request.log"
+    _description = "Project Agile Jira Request Log"
 
     _rec_name = "log_type"
     _order = "attempt desc, log_type"

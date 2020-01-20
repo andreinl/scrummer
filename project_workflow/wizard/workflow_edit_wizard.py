@@ -6,6 +6,7 @@ from odoo import models, fields, api
 
 class ProjectWorkflowEditWizard(models.TransientModel):
     _name = "project.workflow.edit.wizard"
+    _description = "Project Workflow Edit Wizard"
 
     workflow_id = fields.Many2one(comodel_name="project.workflow",)
 

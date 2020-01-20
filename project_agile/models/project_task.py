@@ -60,6 +60,7 @@ class ProjectTaskLink(models.Model):
     )
 
     @api.multi
+    @api.depends()
     def _compute_display_name(self):
         for record in self:
 

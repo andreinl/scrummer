@@ -7,6 +7,7 @@ from ..utils.utils import get_image_type
 
 class GitUser(models.Model):
     _name = "project.git.user"
+    _description = "Project Git User"
 
     name = fields.Char(string="Name", size=256)
 

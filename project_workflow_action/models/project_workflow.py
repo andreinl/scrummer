@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class WorkflowAction(models.AbstractModel):
     _name = "project.workflow.action"
+    _description = "Project Workflow Action"
     _order = "sequence"
 
     def _default_model_id(self):

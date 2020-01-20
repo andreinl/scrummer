@@ -6,6 +6,7 @@ from odoo import models, fields, api
 
 class ProjectTaskWorklogWizard(models.TransientModel):
     _name = "project.task.worklog.wizard"
+    _description = "Project Task Workflow Wizard"
 
     task_id = fields.Many2one(
         comodel_name="project.task", string="Task", required=True,

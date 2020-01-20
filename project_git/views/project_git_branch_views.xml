@@ -65,7 +65,6 @@
     <record id="view_git_branch_kanban" model="ir.ui.view">
         <field name="name">project.git.branch.kanban</field>
         <field name="model">project.git.branch</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban create="0" edit="0">
                 <field name="name"/>
@@ -85,7 +84,7 @@
                             </div>
                             <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                             <div class="o_kanban_image">
-                                    <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                    <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox" alt=""/>
                             </div>
                             <div class="oe_kanban_details">
                                 <div>

@@ -9,6 +9,7 @@ from odoo import models, fields, api
 
 class BoardImportWizard(models.TransientModel):
     _name = "project.agile.board.import.wizard"
+    _description = "Project Agile Board Import Wizard"
 
     data = fields.Binary(string="Data", required=True,)
 

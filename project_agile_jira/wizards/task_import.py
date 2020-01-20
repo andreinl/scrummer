@@ -15,6 +15,7 @@ except (ImportError, IOError) as err:
 
 class TaskImport(models.TransientModel):
     _name = "project.agile.jira.task.import.wizard"
+    _description = "Project Agile Jira Task Import Wizard"
 
     project_id = fields.Many2one(
         comodel_name="project.project", string="Project", required=True,
@@ -96,6 +97,7 @@ class TaskImport(models.TransientModel):
 
 class IssueTypeMapper(models.TransientModel):
     _name = "project.agile.jira.issue.type.mapper"
+    _description = "Project Agile Jira Issue Type Mapper"
 
     task_import_id = fields.Many2one(
         comodel_name="project.agile.jira.task.import.wizard",
