@@ -15,7 +15,7 @@ Usage
 - Double click on workflow transition to open editing form.
 - Define project list
 - Publish new settings.
-|
+
 | After this all tasks which belongs to the specified project will be able to go through that transition.
 
 Credits

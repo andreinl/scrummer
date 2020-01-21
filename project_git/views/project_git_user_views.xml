@@ -103,7 +103,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_res_partner_kanban" style="background-color: #ececec;">
                             <div class="o_dropdown_kanban" style="visibility: visible;">
-                                <a name="icon" class="btn" t-attf-href="#{record.url.raw_value}" target="_blank">
+                                <a name="icon" role="button" class="btn" t-attf-href="#{record.url.raw_value}" target="_blank">
                                 </a>
                             </div>
                             <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
