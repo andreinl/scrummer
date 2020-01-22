@@ -17,7 +17,6 @@
         </xpath>
     </template>
 
-
     <template id="layout" name="Main layout" inherit_id="website.layout">
         <xpath expr="//t[@t-call-assets='web_editor.summernote' and @t-js='false']" position="replace">
             <t t-call-assets="web_editor.summernote" t-js="false" groups="website.group_website_publisher,base.group_portal"/>
@@ -42,7 +41,7 @@
             </button>
         </xpath>
 
-        <xpath expr="//t[@t-if='grouped_tasks']//thead//th[text() = 'Stage']" position="before">
+        <xpath expr="//t[@t-if='grouped_tasks']//thead//th[3]" position="before">
             <th class="text-center">Type</th>
             <th class="text-center">Priority</th>
         </xpath>
@@ -213,7 +212,8 @@
                 </div>
             </div>
         </xpath>
-        <xpath expr="//strong[text()='Date:']/.." position="before">
+
+        <xpath expr="//span[@t-field='task.create_date']/.." position="before">
             <div>
                 <div class="mb8">
                     <strong>Type:</strong>
@@ -230,7 +230,7 @@
             </div>
         </xpath>
 
-        <xpath expr="//strong[text()='Message and communication history']/../../.." position="before">
+        <xpath expr="//div[@t-if='task.description']/.." position="after">
              <div t-if="bool(task.child_ids)" class="table-responsive">
                  <div>
                      <strong>Subtasks:</strong>
@@ -284,7 +284,5 @@
             <attribute name="groups">project_agile.group_project_portal_task_timesheet</attribute>
         </xpath>
     </template>
-
-
 
 </odoo>
