@@ -38,7 +38,7 @@
                         <option t-attf-value="{{swimlane.value}}"><t t-esc="swimlane.text"/></option>
                     </t>
                 </select>
-                <label>Swimlanes group by</label>
+                <label for="">Swimlanes group by</label>
             </div>
         </div>
         <div class="modal-footer">
