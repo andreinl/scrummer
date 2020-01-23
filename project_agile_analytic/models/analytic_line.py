@@ -69,10 +69,10 @@ class ProjectAnalyticLine(models.Model):
     @api.multi
     def _compute_duration(self):
         for record in self:
-            s = fields.Datetime.from_string(record.start_date)
+            s = fields.Datetime.to_datetime(record.start_date)
             e = (
                 record.end_date
-                and fields.Datetime.from_string(record.end_date)
+                and fields.Datetime.to_datetime(record.end_date)
                 or datetime.now()
             )
 
