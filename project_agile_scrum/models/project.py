@@ -40,10 +40,10 @@ class Task(models.Model):
         for record in self:
             record.sprint_state = record.sprint_id.state
 
-    @api.model
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
-        new = super(Task, self).create(vals)
+    def create(self, vals_list):
+        new = super(Task, self).create(vals_list)
         if new.parent_id and new.parent_id.sprint_id:
             new.set_sprint(new.parent_id.sprint_id.id)
         return new

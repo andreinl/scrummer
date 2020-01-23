@@ -152,9 +152,9 @@ class Board(models.Model):
                     )
                 )
 
-    @api.model
-    def create(self, vals):
-        new = super(Board, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        new = super(Board, self).create(vals_list)
         self.clear_caches()
         return new
 

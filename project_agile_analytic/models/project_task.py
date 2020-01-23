@@ -27,12 +27,12 @@ class Task(models.Model):
         for record in self:
             record.analytic_line_count = len(record.analytic_line_ids)
 
-    @api.model
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
-        task = super(Task, self).create(vals)
+    def create(self, vals_list):
+        task = super(Task, self).create(vals_list)
         if task.analytic_enabled:
-            task.create_task_analytic_line(vals, True)
+            task.create_task_analytic_line(vals_list, True)
         return task
 
     @api.multi

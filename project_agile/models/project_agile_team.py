@@ -109,9 +109,9 @@ class AgileTeam(models.Model):
         for rec in self:
             rec.image = tools.image_resize_image_big(rec.image_small)
 
-    @api.model
-    def create(self, vals):
-        new = super(AgileTeam, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        new = super(AgileTeam, self).create(vals_list)
         new.member_ids.fix_team_id()
         return new
 

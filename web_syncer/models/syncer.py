@@ -127,10 +127,10 @@ class Base(models.AbstractModel):
         self.process_x2m_notifications(vals)
         return ret
 
-    @api.model
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
-        new = super(Base, self).create(vals)
+    def create(self, vals_list):
+        new = super(Base, self).create(vals_list)
         if is_module_installed(self.env, "web_syncer") and hasattr(
             self.env, "syncer"
         ):
@@ -139,7 +139,7 @@ class Base(models.AbstractModel):
             if new._implements_syncer:
                 new.push_create_notification()
 
-            new.process_x2m_notifications(vals)
+            new.process_x2m_notifications(vals_list)
 
             if self.env.syncer.is_top_level:
                 for delta, record, indirect in self.env.syncer.records:

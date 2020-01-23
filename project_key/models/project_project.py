@@ -27,15 +27,16 @@ class ProjectProject(models.Model):
             else:
                 rec.key = ""
 
-    @api.model
-    def create(self, vals):
-        if "key" not in vals:
-            if vals["name"]:
-                vals["key"] = self.generate_project_key(vals["name"])
-            else:
-                vals["key"] = ""
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "key" not in vals:
+                if vals["name"]:
+                    vals["key"] = self.generate_project_key(vals["name"])
+                else:
+                    vals["key"] = ""
 
-        new_project = super(ProjectProject, self).create(vals)
+        new_project = super(ProjectProject, self).create(vals_list)
         new_project.create_sequence()
 
         return new_project

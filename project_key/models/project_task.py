@@ -24,22 +24,23 @@ class Task(models.Model):
         for task in self:
             task.url = TASK_URL % (task.id, task_action.id)
 
-    @api.model
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
-        project_id = False
-        if vals.get("project_id", False):
-            project_id = vals["project_id"]
-        elif self._context.get("default_project_id", False):
-            project_id = self._context.get("default_project_id", False)
-        elif self._context.get(
-            "active_model", False
-        ) == "project.project" and self._context.get("active_id", False):
-            project_id = self._context.get("active_id")
-        if project_id:
-            project = self.env["project.project"].browse(project_id)
-            vals["key"] = project.get_next_task_key()
-        return super(Task, self).create(vals)
+    def create(self, vals_list):
+        for vals in vals_list:
+            project_id = False
+            if vals.get("project_id", False):
+                project_id = vals["project_id"]
+            elif self._context.get("default_project_id", False):
+                project_id = self._context.get("default_project_id", False)
+            elif self._context.get(
+                "active_model", False
+            ) == "project.project" and self._context.get("active_id", False):
+                project_id = self._context.get("active_id")
+            if project_id:
+                project = self.env["project.project"].browse(project_id)
+                vals["key"] = project.get_next_task_key()
+        return super(Task, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

@@ -252,14 +252,15 @@ class Project(models.Model):
             self.allow_workflow = True
 
     # CRUD Overrides
-    @api.model
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
-        # Activating agile will automatically activate workflow as well
-        if vals.get("agile_enabled", False):
-            vals["allow_workflow"] = True
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Activating agile will automatically activate workflow as well
+            if vals.get("agile_enabled", False):
+                vals["allow_workflow"] = True
 
-        new = super(Project, self).create(vals)
+        new = super(Project, self).create(vals_list)
         new.subtask_project_id = new.id
 
         if new.agile_enabled:

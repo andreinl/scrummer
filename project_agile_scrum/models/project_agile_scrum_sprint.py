@@ -130,9 +130,14 @@ class Sprint(models.Model):
             hrs_int = int(hrs)
             rec.sprint_length_hrs = hrs_int
 
-    @api.model
+    @api.multi
+    def write(self, values):
+        result = super(Sprint, self).write(values)
+        return result
+
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
+    def create(self, vals_list):
         if not self.env.user.team_id:
             raise exceptions.ValidationError(
                 _(
@@ -141,9 +146,10 @@ class Sprint(models.Model):
                 )
             )
 
-        if "name" not in vals:
-            vals["name"] = "Sprint %s" % self.env.user.team_id.sprint_sequence
+        for vals in vals_list:
+            if "name" not in vals:
+                vals["name"] = "Sprint %s" % self.env.user.team_id.sprint_sequence
 
-        self.env.user.team_id.sprint_sequence += 1
+        self.env.user.team_id.sprint_sequence += len(vals_list)
 
-        return super(Sprint, self).create(vals)
+        return super(Sprint, self).create(vals_list)

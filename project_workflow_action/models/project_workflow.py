@@ -26,10 +26,11 @@ class WorkflowAction(models.AbstractModel):
 
     sequence = fields.Integer(default=5)
 
-    @api.model
-    def create(self, vals):
-        vals["model_id"] = self._default_model_id()
-        return super(WorkflowAction, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["model_id"] = self._default_model_id()
+        return super(WorkflowAction, self).create(vals_list)
 
 
 class WorkflowStateAction(models.Model):

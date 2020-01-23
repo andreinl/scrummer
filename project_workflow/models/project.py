@@ -209,25 +209,27 @@ class Task(models.Model):
 
         return False
 
-    @api.model
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
-        project_id = vals.get(
-            "project_id", self.env.context.get("default_project_id", False)
-        )
-        stage_id = self.with_context(
-            default_project_id=project_id
-        )._get_default_stage_id()
+    def create(self, vals_list):
+        for vals in vals_list:
+            project_id = vals.get(
+                "project_id", self.env.context.get("default_project_id", False)
+            )
+            stage_id = self.with_context(
+                default_project_id=project_id
+            )._get_default_stage_id()
 
-        if stage_id:
-            vals["stage_id"] = stage_id
+            if stage_id:
+                vals["stage_id"] = stage_id
 
-        new = super(Task, self).create(vals)
+        new_list = super(Task, self).create(vals_list)
 
-        if new.project_id.allow_workflow and new.workflow_id:
-            new.wkf_state_id.apply(new)
+        for new in new_list:
+            if new.project_id.allow_workflow and new.workflow_id:
+                new.wkf_state_id.apply(new)
 
-        return new
+        return new_list
 
     @api.multi
     def write(self, vals):

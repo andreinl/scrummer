@@ -551,40 +551,41 @@ class Task(models.Model):
 
             self.portal_visible = self.type_id.portal_visible
 
-    @api.model
+    @api.model_create_multi
     @api.returns("self", lambda value: value.id)
-    def create(self, vals):
-        project_id = vals.get(
-            "project_id", self.env.context.get("default_project_id", False)
-        )
+    def create(self, vals_list):
+        for vals in vals_list:
+            project_id = vals.get(
+                "project_id", self.env.context.get("default_project_id", False)
+            )
 
-        if project_id:
-            project = self.env["project.project"].browse(project_id)
+            if project_id:
+                project = self.env["project.project"].browse(project_id)
 
-            if not vals.get("type_id", False):
-                default_type_id = self.env.context.get(
-                    "default_type_id", False
-                )
-                if default_type_id:
-                    vals["type_id"] = default_type_id
-                else:
-                    dtt = project.type_id.default_task_type_id
-                    vals["type_id"] = dtt and dtt.id or False
+                if not vals.get("type_id", False):
+                    default_type_id = self.env.context.get(
+                        "default_type_id", False
+                    )
+                    if default_type_id:
+                        vals["type_id"] = default_type_id
+                    else:
+                        dtt = project.type_id.default_task_type_id
+                        vals["type_id"] = dtt and dtt.id or False
 
-            if "portal_visible" not in vals:
-                vals["portal_visible"] = (
-                    self.env["project.task.type2"]
-                    .browse(vals["type_id"])
-                    .portal_visible
-                )
+                if "portal_visible" not in vals:
+                    vals["portal_visible"] = (
+                        self.env["project.task.type2"]
+                        .browse(vals["type_id"])
+                        .portal_visible
+                    )
 
-            if not vals.get("priority_id", False) and vals.get("type_id"):
-                task_type = self.env["project.task.type2"].browse(
-                    vals.get("type_id")
-                )
-                vals["priority_id"] = task_type.default_priority_id.id or False
+                if not vals.get("priority_id", False) and vals.get("type_id"):
+                    task_type = self.env["project.task.type2"].browse(
+                        vals.get("type_id")
+                    )
+                    vals["priority_id"] = task_type.default_priority_id.id or False
 
-        new = super(Task, self).create(vals)
+        new = super(Task, self).create(vals_list)
 
         if new.parent_id and new.parent_id.stage_id:
             new._write({"stage_id": new.parent_id.stage_id.id})
