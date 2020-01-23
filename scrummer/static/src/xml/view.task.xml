@@ -115,14 +115,14 @@
                                     <tr data-field-name="write_date">
                                         <td class="field_label">Created</td>
                                         <td data-field="create_date">
-                                            <span class="field_value"><t t-esc="widget._model.create_date"/></span>
+                                            <span class="field_value"><t t-esc="widget.create_date"/></span>
                                         </td>
 
                                     </tr>
                                     <tr data-field-name="write_date">
                                         <td class="field_label">Updated</td>
                                         <td data-field="write_date">
-                                            <span class="field_value"><t t-esc="widget._model.write_date"/></span>
+                                            <span class="field_value"><t t-esc="widget.write_date"/></span>
                                         </td>
 
                                     </tr>

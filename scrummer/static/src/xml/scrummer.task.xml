@@ -128,13 +128,13 @@
                             <tr data-field-name="create_date">
                                 <td class="field_label">Created</td>
                                 <td data-field="create_date">
-                                    <span class="field_value"><t t-esc="widget._model.create_date"/></span>
+                                    <span class="field_value"><t t-esc="widget.create_date"/></span>
                                 </td>
                             </tr>
                             <tr data-field-name="write_date">
                                 <td class="field_label">Updated</td>
                                 <td data-field="write_date">
-                                    <span class="field_value"><t t-esc="widget._model.write_date"/></span>
+                                    <span class="field_value"><t t-esc="widget.write_date"/></span>
                                 </td>
                             </tr>
                             <tr data-field-name="date_deadline" t-if="widget._model.date_deadline">
@@ -325,7 +325,7 @@
                     </t>
                     <div class="activity-footer">
                         <!--<i class="mdi mdi-bookmark task-type"></i>-->
-                        <span class="activity-item-date"><t t-esc="widget.record.date"/></span>
+                        <span class="activity-item-date"><t t-esc="widget.formatTime(widget.record.date)"/></span>
                     </div>
                 </div>
             </div>

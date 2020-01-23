@@ -16,6 +16,7 @@ odoo.define('scrummer.widget.task', function (require) {
     const _t = web_core._t;
     const dialog = require('scrummer.dialog');
     const mixins = require('scrummer.mixins');
+    const time = require('web.time');
 
     const TimeSheetListItem = AbstractModelList.AbstractModelListItem.extend({
         template: "scrummer.task.timesheets.line",
@@ -190,6 +191,9 @@ odoo.define('scrummer.widget.task', function (require) {
             return superPromise.then(() => {
                 return DataServiceFactory.get("project.task.type2").getRecord(this._model.type_id[0]).then(task_type => {
                     this.task_type = task_type;
+                    // Convert time for current timezone
+                    this.create_date = moment(time.auto_str_to_date(this._model.create_date)).format(time.getLangDatetimeFormat());
+                    this.write_date = moment(time.auto_str_to_date(this._model.write_date)).format(time.getLangDatetimeFormat());
                 })
             });
         },

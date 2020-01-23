@@ -7,6 +7,7 @@ odoo.define('scrummer.model_list', function (require) {
     const AbstractModelList = require('scrummer.abstract_model_list');
     const AgileModals = require('scrummer.widget.modal');
     const core = require("web.core");
+    var time = require('web.time');
     const _t = core._t;
     const hash_service = require('scrummer.hash_service');
 
@@ -86,9 +87,12 @@ odoo.define('scrummer.model_list', function (require) {
                 this.setWriteDate();
             }
         },
+        formatTime(format_time) {
+            return moment(time.auto_str_to_date(format_time)).format(time.getLangDatetimeFormat());
+        },
         setWriteDate() {
             this.$(".activity-item-write-date").remove();
-            let tooltipString = this.record.author_id[1] + _t(" at ") + this.record.write_date;
+            let tooltipString = this.record.author_id[1] + _t(" at ") + moment(time.auto_str_to_date(this.record.write_date)).format(time.getLangDatetimeFormat());
             let writeDateNode = $('<span class="activity-item-write-date tooltipped" data-position="bottom" data-delay="50" data-tooltip="' + tooltipString + '"/>');
             writeDateNode.insertAfter(this.$(".activity-item-date"));
             writeDateNode.tooltip();
