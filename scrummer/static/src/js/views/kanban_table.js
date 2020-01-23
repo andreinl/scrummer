@@ -778,6 +778,9 @@ odoo.define('scrummer.view.kanban_table', function (require) {
         },
         getColumnFromStageField(stageFieldId) {
             for (let column of this.data.sorted_columns) {
+                if (!column.status) {
+                    continue;
+                }
                 for (let status of column.status) {
                     if (this.data.workflow.states[status.state_id].stage_id === stageFieldId) {
                         return column;

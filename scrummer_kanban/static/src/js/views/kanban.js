@@ -132,7 +132,10 @@ odoo.define('scrummer.view.kanban', function (require) {
         },
 
         isTaskInBacklog(task) {
-            return this.backlog_stages.get(task.workflow_id[0]).includes(task.stage_id[0]);
+            if (this.backlog_stages.has(task.workflow_id[0])) {
+                return this.backlog_stages.get(task.workflow_id[0]).includes(task.stage_id[0]);
+            }
+            return false;
         },
         _getTaskItemClass() {
             return BacklogTaskItem;
@@ -161,6 +164,9 @@ odoo.define('scrummer.view.kanban', function (require) {
             let stage_map = evt.data.type === "backlog_column" ?
                     this.backlog_column_stages : this.backlog_stages;
 
+            if (!stage_map.has(evt.data.task.workflow_id[0])) {
+                return;
+            }
             let stage_id = stage_map.get(evt.data.task.workflow_id[0])[0];
 
             evt.data.task.write({stage_id, [evt.data.order_field]: evt.data.order}, {context: {kanban_backlog: true}});
