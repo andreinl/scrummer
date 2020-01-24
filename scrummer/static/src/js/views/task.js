@@ -285,8 +285,13 @@ odoo.define('scrummer.view.task', function (require) {
             this.renderButtons();
         },
         getAllowedTransitions() {
-            return this.workflow.states[this.workflow.stageToState[this.taskStageId]].out_transitions
-                .map(transitionId => this.workflow.transitions[transitionId]);
+            if (this.workflow.states.length > 0 &&
+              this.workflow.stageToState.length > 0 &&
+              this.workflow.stageToState.hasOwnProperty(this.taskStageId)) {
+                return this.workflow.states[this.workflow.stageToState[this.taskStageId]].out_transitions
+                  .map(transitionId => this.workflow.transitions[transitionId]);
+            }
+            return [];
         },
         renderButtons() {
             this.$el.empty();
