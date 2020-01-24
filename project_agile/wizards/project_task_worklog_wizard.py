@@ -13,7 +13,7 @@ class ProjectTaskWorklogWizard(models.TransientModel):
     )
 
     date = fields.Date(
-        string="Date", required=True, default=lambda *a: fields.Date.today(),
+        string="Date", required=True, default=fields.Date.context_today,
     )
 
     user_id = fields.Many2one(
