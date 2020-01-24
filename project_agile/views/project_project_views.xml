@@ -136,10 +136,28 @@
 
             <notebook>
                 <page name="teams" string="Teams">
-                    <field name="todo_estimation"/>
-                    <field name="in_progress_estimation"/>
-                    <field name="done_estimation"/>
-                    <field name="team_ids" readonly="1"/>
+                    <label for="todo_estimation_name" string="Todo estimation"/>
+                    <div name="todo_estimation_def">
+                        <field name="todo_estimation"/>
+                    </div>
+                    <label for="in_progress_estimation_name" string="In progress estimation"/>
+                    <div name="in_progress_estimation_def">
+                        <field name="in_progress_estimation"/>
+                    </div>
+                    <label for="done_estimation_name" string="Done estimation"/>
+                    <div name="done_estimation_def">
+                        <field name="done_estimation"/>
+                    </div>
+                    <label for="team_name" string="Team"/>
+                    <div name="team_def">
+                        <field name="agile_method" invisible="1"/>
+                        <field name="team_ids" domain="[('type', '=', agile_method)]" readonly="0"/>
+                    </div>
+                    <label for="board_name" string="Board"/>
+                    <div name="board_def">
+                        <field name="agile_method" invisible="1"/>
+                        <field name="board_ids" widget="many2many_tags" domain="[('type', '=', agile_method)]" readonly="0"/>
+                    </div>
                 </page>
             </notebook>
 
