@@ -5,7 +5,7 @@
 -->
 <templates xml:space="preserve">
     <t t-name="scrummer.view.floating-action-button">
-        <t t-if="widget.menuItems">
+        <t t-if="widget.menuItems and widget.menuItems.length &gt; 0">
             <!-- Floating Action Button -->
             <div class="fixed-action-btn">
                 <a class="btn-floating btn-large" data-position="left" data-delay="50">

@@ -98,12 +98,12 @@
     <t t-name="scrummer.kanban_table.card">
         <div class="card-panel sortable-item parent has-children" draggable="true" t-attf-data-card-id="{{widget.record.id}}">
         <span class="card-title">
-            <t t-if="widget.menuItems">
+            <t t-if="widget.menuItems and widget.menuItems.length &gt; 0">
                 <i class="mdi mdi-dots-vertical mdi-18px right dropdown-button" data-constrainwidth="false" data-alignment="right" data-gutter="-10"
                    t-attf-data-activates="card-menu-{{widget.record.id}}"/>
             </t>
         </span>
-        <t t-if="widget.menuItems">
+        <t t-if="widget.menuItems and widget.menuItems.length &gt; 0">
             <ul t-attf-id="card-menu-{{widget.record.id}}" class="dropdown-content">
                 <t t-foreach="widget.menuItems" t-as="item">
                     <li t-attf-class="{{item.class}}">
