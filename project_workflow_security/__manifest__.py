@@ -4,16 +4,12 @@
     "name": "Project Workflow Security",
     "summary": "Module extends workflow transitions with security groups.",
     "category": "Project",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Odoo Community Association (OCA), Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow"
-    ],
-    "data": [
-        "views/project_workflow_views.xml",
-    ],
+    "depends": ["project_workflow"],
+    "data": ["views/project_workflow_views.xml",],
     "images": [],
     "installable": True,
 }

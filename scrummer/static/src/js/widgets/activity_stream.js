@@ -7,6 +7,7 @@ odoo.define('scrummer.activity_stream', function (require) {
     var data = require('scrummer.data');
     var AgileBaseWidget = require('scrummer.BaseWidgets').AgileBaseWidget;
     var core = require("web.core");
+    var time = require('web.time');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -146,8 +147,9 @@ odoo.define('scrummer.activity_stream', function (require) {
             lastWeek: 'dddd [at] HH:MM',
             sameElse: 'DD/MM/YYYY [at] HH:MM'
         },
-        formatTime(time) {
-            return moment(time).calendar(null, this.timeFormat);
+        formatTime(format_time) {
+            var new_time = moment(time.auto_str_to_date(format_time)).format(time.getLangDatetimeFormat());
+            return moment(new_time).calendar(null, this.timeFormat);
         },
         groupWeekDayFormat: {
             sameDay: '[Today]',
@@ -155,8 +157,9 @@ odoo.define('scrummer.activity_stream', function (require) {
             lastWeek: 'dddd',
             sameElse: '[Older]'
         },
-        formatGroupWeekDay(time) {
-            return moment(time).calendar(null, this.groupWeekDayFormat);
+        formatGroupWeekDay(format_time) {
+            var new_time = moment(time.auto_str_to_date(format_time)).format(time.getLangDatetimeFormat());
+            return moment(new_time).calendar(null, this.groupWeekDayFormat);
         },
         getActivityType(message) {
 

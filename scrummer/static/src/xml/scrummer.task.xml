@@ -23,12 +23,12 @@
                 </div>
                 <div class="card-header-right">
                     <div class="wrapper">
-                        <t t-if="widget.menuItems">
+                        <t t-if="widget.menuItems and widget.menuItems.length &gt; 0">
                             <i class="mdi mdi-dots-vertical mdi-24px dropdown-button" data-constrainwidth="false" data-alignment="right" data-gutter="-10"
                                t-attf-data-activates="task-widget-menu"/>
                         </t>
                         <div t-if="widget.isQuickDetailView" class="card-close"><i class="mdi mdi-close"></i></div>
-                        <t t-if="widget.menuItems">
+                        <t t-if="widget.menuItems and widget.menuItems.length &gt; 0">
                             <ul t-attf-id="task-widget-menu" class="dropdown-content">
                                 <t t-foreach="widget.menuItems" t-as="item">
                                     <li t-attf-class="{{item.class}}">
@@ -113,7 +113,7 @@
                                 </td>
                             </tr>
                             <tr data-field-name="create_uid">
-                                <td class="field_label">Reporeted by</td>
+                                <td class="field_label">Reported by</td>
                                 <td data-field="create_uid">
                                     <span class="field_value"><t t-esc="widget._model.create_uid[1]"/></span>
                                 </td>
@@ -128,13 +128,13 @@
                             <tr data-field-name="create_date">
                                 <td class="field_label">Created</td>
                                 <td data-field="create_date">
-                                    <span class="field_value"><t t-esc="widget._model.create_date"/></span>
+                                    <span class="field_value"><t t-esc="widget.create_date"/></span>
                                 </td>
                             </tr>
                             <tr data-field-name="write_date">
                                 <td class="field_label">Updated</td>
                                 <td data-field="write_date">
-                                    <span class="field_value"><t t-esc="widget._model.write_date"/></span>
+                                    <span class="field_value"><t t-esc="widget.write_date"/></span>
                                 </td>
                             </tr>
                             <tr data-field-name="date_deadline" t-if="widget._model.date_deadline">
@@ -196,7 +196,7 @@
                         <span class="estimate grey lighten-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Estimated story points"><t t-esc="widget.record.story_points"/></span>
                     </div>
                     <img t-attf-src="{{widget.image_url()}}" alt="" class="user-image circle tooltipped" data-position="bottom" data-delay="50" t-attf-data-tooltip="{{widget.image_tooltip()}}"/>
-                    <t t-if="widget.menuItems">
+                    <t t-if="widget.menuItems and widget.menuItems.length &gt; 0">
                         <div class="task-menu waves-effect dropdown-button" data-constrainwidth="false" data-alignment="right" data-gutter="-10" t-attf-data-activates="task-menu-{{widget.id}}" ><i class="mdi mdi-dots-vertical"/></div>
                         <ul t-attf-id="task-menu-{{widget.id}}" class="dropdown-content">
                             <t t-foreach="widget.menuItems" t-as="item">
@@ -325,7 +325,7 @@
                     </t>
                     <div class="activity-footer">
                         <!--<i class="mdi mdi-bookmark task-type"></i>-->
-                        <span class="activity-item-date"><t t-esc="widget.record.date"/></span>
+                        <span class="activity-item-date"><t t-esc="widget.formatTime(widget.record.date)"/></span>
                     </div>
                 </div>
             </div>

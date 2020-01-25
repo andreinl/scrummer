@@ -4,14 +4,12 @@ from odoo import models, fields
 
 
 class Task(models.Model):
-    _inherit = 'project.task'
+    _inherit = "project.task"
 
     sprint_id = fields.Many2one(
-        comodel_name="project.agile.scrum.sprint",
-        scrummer=True
+        comodel_name="project.agile.scrum.sprint", scrummer=True
     )
 
     sprint_ids = fields.Many2many(
-        comodel_name="project.agile.scrum.sprint",
-        scrummer=True
+        comodel_name="project.agile.scrum.sprint", scrummer=True
     )

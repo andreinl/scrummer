@@ -4,7 +4,6 @@ from odoo import http
 
 
 class SyncerEndPoint(http.EndPoint):
-
     def __call__(self, *args, **kw):
         result = self.method(*args, **kw)
 

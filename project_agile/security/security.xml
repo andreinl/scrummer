@@ -46,28 +46,24 @@
             <field name="name">Portal Task Create</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
-            <field name="is_portal" eval="True"/>
         </record>
 
         <record id="group_project_portal_task_edit" model="res.groups">
             <field name="name">Portal Task Edit</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
-            <field name="is_portal" eval="True"/>
         </record>
 
         <record id="group_project_portal_task_wkf" model="res.groups">
             <field name="name">Portal Task Workflow</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
-            <field name="is_portal" eval="True"/>
         </record>
 
         <record id="group_project_portal_task_timesheet" model="res.groups">
             <field name="name">Portal Task View Timesheet</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
-            <field name="is_portal" eval="True"/>
         </record>
 
         <record model="ir.rule" id="project_agile_board_visibility">

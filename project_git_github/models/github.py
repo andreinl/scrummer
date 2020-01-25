@@ -5,23 +5,19 @@ from dateutil.parser import parse
 
 from odoo import models, fields, http
 
-TYPE = [('github', 'GitHub')]
+TYPE = [("github", "GitHub")]
 
 
 class GitUser(models.Model):
-    _inherit = 'project.git.user'
+    _inherit = "project.git.user"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitRepository(models.Model):
-    _inherit = 'project.git.repository'
+    _inherit = "project.git.repository"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
     def _secret_visible_for_types(self):
         types = super(GitRepository, self)._secret_visible_for_types()
@@ -30,23 +26,19 @@ class GitRepository(models.Model):
 
 
 class GitCommit(models.Model):
-    _inherit = 'project.git.commit'
+    _inherit = "project.git.commit"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitBranch(models.Model):
-    _inherit = 'project.git.branch'
+    _inherit = "project.git.branch"
 
-    type = fields.Selection(
-        selection_add=TYPE,
-    )
+    type = fields.Selection(selection_add=TYPE,)
 
 
 class GitPayloadParser(models.AbstractModel):
-    _inherit = 'project.git.payload.parser'
+    _inherit = "project.git.payload.parser"
 
     # -------------------------------------------
     # Header
@@ -93,28 +85,26 @@ class GitPayloadParser(models.AbstractModel):
         return {
             "repository": self.parse_github_repository(context),
             "branches": [self.parse_github_branch(context)],
-            "sender": self.parse_github_sender(context)
+            "sender": self.parse_github_sender(context),
         }
 
     # -------------------------------------------
     # Action Delete
     # -------------------------------------------
     def parse_github_delete(self, context):
-        return {
-            "branches": [self.parse_github_branch(context, False)]
-        }
+        return {"branches": [self.parse_github_branch(context, False)]}
 
     # -------------------------------------------
     # Paring methods
     # -------------------------------------------
     def parse_github_branch(self, context, commits=True):
         payload = context.raw_payload
-        name = payload["ref"] and payload["ref"].rsplit('/', 1)[-1] or "None"
+        name = payload["ref"] and payload["ref"].rsplit("/", 1)[-1] or "None"
         data = {
             "name": name,
             "url": payload["compare"],
             "type": context.type,
-            "repository_id": context.repository.id
+            "repository_id": context.repository.id,
         }
 
         if commits:
@@ -131,11 +121,11 @@ class GitPayloadParser(models.AbstractModel):
     def parse_github_commit(self, context, commit):
         return {
             "name": commit["id"][:8],
-            "message": commit["message"] and commit["message"].strip() or '',
+            "message": commit["message"] and commit["message"].strip() or "",
             "url": commit["url"],
             "type": context.type,
             "date": fields.Datetime.to_string(parse(commit["timestamp"])),
-            'author': self.parse_github_commit_author(context, commit),
+            "author": self.parse_github_commit_author(context, commit),
         }
 
     def parse_github_commit_author(self, context, commit):
@@ -164,9 +154,9 @@ class GitPayloadParser(models.AbstractModel):
         return {
             "username": sender["login"],
             "type": context.type,
-            "avatar": sender['avatar_url'],
-            "url": sender['html_url'],
-            "uuid": sender['id'],
+            "avatar": sender["avatar_url"],
+            "url": sender["html_url"],
+            "uuid": sender["id"],
         }
 
     def parse_github_repository(self, context):
@@ -176,7 +166,7 @@ class GitPayloadParser(models.AbstractModel):
             "uuid": repository["id"],
             "url": repository["html_url"],
             "type": context.type,
-            'owner': self.parse_github_repository_owner(context)
+            "owner": self.parse_github_repository_owner(context),
         }
 
     def parse_github_repository_owner(self, context):

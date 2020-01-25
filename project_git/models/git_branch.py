@@ -7,23 +7,13 @@ from ..utils.utils import get_image_type, get_avatar
 
 class GitBranch(models.Model):
     _name = "project.git.branch"
+    _description = "Project Git Branch"
 
-    name = fields.Char(
-        string="Name",
-        size=256,
-        required=True,
-        index=True,
-    )
+    name = fields.Char(string="Name", size=256, required=True, index=True,)
 
-    url = fields.Char(
-        string="URL",
-        required=True
-    )
+    url = fields.Char(string="URL", required=True)
 
-    uuid = fields.Char(
-        string="UUID",
-        size=256
-    )
+    uuid = fields.Char(string="UUID", size=256)
 
     repository_id = fields.Many2one(
         comodel_name="project.git.repository",
@@ -36,7 +26,7 @@ class GitBranch(models.Model):
         comodel_name="project.project",
         string="Project",
         related="repository_id.project_id",
-        store=True
+        store=True,
     )
 
     type = fields.Selection(
@@ -51,27 +41,17 @@ class GitBranch(models.Model):
     commit_ids = fields.One2many(
         comodel_name="project.git.commit",
         string="Commits",
-        inverse_name="branch_id"
+        inverse_name="branch_id",
     )
 
-    commit_count = fields.Integer(
-        compute="_compute_commit_count"
-    )
+    commit_count = fields.Integer(compute="_compute_commit_count")
 
-    avatar = fields.Char(
-        string="Avatar",
-        compute="_compute_avatar",
-    )
+    avatar = fields.Char(string="Avatar", compute="_compute_avatar",)
 
-    image_type = fields.Char(
-        string="Type",
-        compute="_compute_image_type"
-    )
+    image_type = fields.Char(string="Type", compute="_compute_image_type")
 
     user_id = fields.Many2one(
-        comodel_name="project.git.user",
-        string="Owner",
-        ondelete="cascade",
+        comodel_name="project.git.user", string="Owner", ondelete="cascade",
     )
 
     @api.multi
@@ -82,7 +62,7 @@ class GitBranch(models.Model):
 
     @api.multi
     def _compute_avatar(self):
-        get_avatar(self, 'branch')
+        get_avatar(self, "branch")
 
     @api.multi
     @api.depends("type")

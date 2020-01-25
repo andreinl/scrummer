@@ -6,6 +6,7 @@ odoo.define('scrummer.attachments', require => {
     var BaseWidgets = require('scrummer.BaseWidgets');
     var AbstractModelList = require('scrummer.abstract_model_list');
     var dialog = require('scrummer.dialog');
+    var time = require('web.time');
     var _t = require('web.core')._t;
 
     const AttachmentsWidget = BaseWidgets.AgileBaseWidget.extend({
@@ -139,6 +140,7 @@ odoo.define('scrummer.attachments', require => {
         prepareUserImage() {
             return data.cache.get("get_user", {id: this.record.create_uid[0]}).then(user => {
                 this.user_image_url = data.getImage("res.users", user.id, user.write_date);
+                this.create_date = moment(time.auto_str_to_date(this.record.create_date)).format(time.getLangDatetimeFormat());
             });
         },
         renderElement() {
@@ -234,7 +236,7 @@ odoo.define('scrummer.attachments', require => {
                 this.$(".name").html(`<a href="${this.record.local_url}" download="${this.record.datas_fname}" target="_blank">${this.record.name}</a>`);
                 this.prepareUserImage().then(() => {
                     let image = $(`<img src="${this.user_image_url}" class="circle valign image tooltipped"
-                    data-position="bottom" data-delay="50" data-tooltip="${this.record.create_uid[1]} @ ${this.record.create_date}"/>`);
+                    data-position="bottom" data-delay="50" data-tooltip="${this.record.create_uid[1]} @ ${moment(time.auto_str_to_date(this.record.create_date)).format(time.getLangDatetimeFormat())}"/>`);
                     image.insertBefore(this.$(".meta"));
                     image.tooltip();
                 });

@@ -6,21 +6,13 @@
     "summary": """This module extends Scrummer in order to support timesheet
     categories introduced in project_timesheet_category module""",
     "category": "Project",
-    "version": "10.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "scrummer",
-        "project_timesheet_category",
-    ],
-    "data": [
-        "views/assets.xml",
-    ],
-
+    "depends": ["scrummer", "project_timesheet_category",],
+    "data": ["views/assets.xml",],
     "demo": [],
-    "qweb": [
-        "static/src/xml/scrummer_timesheet.xml",
-    ],
-    "application": False
+    "qweb": ["static/src/xml/scrummer_timesheet.xml",],
+    "application": False,
 }

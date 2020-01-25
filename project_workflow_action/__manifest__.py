@@ -4,14 +4,11 @@
     "name": "Project Workflow Actions",
     "summary": "Module extends workflow with server actions.",
     "category": "Project",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow",
-        "server_action_sudo",
-    ],
+    "depends": ["project_workflow", "server_action_sudo",],
     "data": [
         "security/ir.model.access.csv",
         "views/project_workflow_views.xml",

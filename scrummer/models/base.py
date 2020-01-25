@@ -5,7 +5,7 @@ from odoo import models, fields, api
 
 
 class Base(models.AbstractModel):
-    _inherit = 'base'
+    _inherit = "base"
 
     @api.model
     def _format_values(self, record, vals, update_related_fields=False):
@@ -14,18 +14,18 @@ class Base(models.AbstractModel):
         )
 
         for fn in list(res.keys()):
-            if not record._fields[fn]._attrs.get('scrummer', False):
+            if not record._fields[fn]._attrs.get("scrummer", False):
                 del res[fn]
         return res
 
 
 class AgileSystemCodeItem(models.AbstractModel):
-    _inherit = 'project.agile.code_item'
+    _inherit = "project.agile.code_item"
 
     name = fields.Char(scrummer=True)
     description = fields.Html(scrummer=True)
     system = fields.Boolean(scrummer=True)
     active = fields.Boolean(scrummer=True)
     sequence = fields.Integer(scrummer=True)
-    scrummer_icon = fields.Char(string='Scrummer Icon')
-    scrummer_icon_color = fields.Char(string='Scrummer Icon Color')
+    scrummer_icon = fields.Char(string="Scrummer Icon")
+    scrummer_icon_color = fields.Char(string="Scrummer Icon Color")

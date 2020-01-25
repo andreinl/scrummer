@@ -5,22 +5,19 @@ from odoo import models, fields, api
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _inherit = "account.analytic.line"
 
     category_id = fields.Many2one(
-        comodel_name='project.timesheet.category',
-        string='Category',
+        comodel_name="project.timesheet.category",
+        string="Category",
         default=lambda self: self.env.user.default_timesheet_category_id,
     )
 
     billable = fields.Selection(
-        selection=[
-            ('yes', 'Yes'),
-            ('no', 'No'),
-        ],
-        string='Billable',
+        selection=[("yes", "Yes"), ("no", "No"),],
+        string="Billable",
         required=True,
-        default='yes',
+        default="yes",
     )
 
     @api.onchange("user_id")

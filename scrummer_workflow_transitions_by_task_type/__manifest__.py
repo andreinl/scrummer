@@ -5,7 +5,7 @@
     "name": "Scrummer Workflow Transitions By Task Type",
     "summary": "Extend project workflow transitions with allowed task types",
     "category": "Project",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
@@ -13,10 +13,7 @@
         "project_agile_workflow_transitions_by_task_type",
         "scrummer",
     ],
-
-    "data": [
-        "views/scrummer_workflow_transitions_by_task_type.xml",
-    ],
+    "data": ["views/scrummer_workflow_transitions_by_task_type.xml",],
     "images": [],
     "installable": True,
 }

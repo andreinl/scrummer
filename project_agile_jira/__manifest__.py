@@ -5,28 +5,19 @@
     "name": "Project Agile Jira Extension",
     "summary": "Enables you to migrate projects and tasks from JIRA to Odoo",
     "category": "Project",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_agile",
-    ],
-
-    'external_dependencies': {
-        'python': ['jira'],
-    },
-
+    "depends": ["project_agile",],
+    "external_dependencies": {"python": ["jira"],},
     "data": [
         "security/ir.model.access.csv",
-
         "data/sequences.xml",
         "data/crons.xml",
-
         "wizards/task_import_view.xml",
-
         "views/jira_request_views.xml",
-        "views/jira_config_views.xml"
+        "views/jira_config_views.xml",
     ],
     "application": True,
 }

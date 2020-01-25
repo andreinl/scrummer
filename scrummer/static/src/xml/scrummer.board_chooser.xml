@@ -19,7 +19,9 @@
                      class="circle responsive-img valign profile-image"/>
             </div>
             <div class="board-chooser-middle">
-                <a class="white-text project-name"><t t-if="widget.project" t-esc="widget.project.name"/><t t-if="!widget.project">All project</t></a>
+                <!-- TODO hide widget.project.name, not working properly -->
+                <!--                <a class="white-text project-name"><t t-if="widget.project" t-esc="widget.project.name"/><t t-if="!widget.project">All project</t></a>-->
+                <t t-if="!widget.project"><a class="white-text project-name">All project</a></t>
                 <a t-attf-class="{{(widget.boards.size !== 1) ? 'available-boards white-text dropdown-button' : 'available-boards white-text'}}" data-activates="board-chooser-dropdown">
                     <t t-esc="widget.board.name"/> <i t-if="widget.boards.size !== 1" class="mdi mdi-menu-down right"></i>
                 </a>

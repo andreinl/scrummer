@@ -52,7 +52,7 @@ class GitContext(object):
 
     @property
     def parser(self):
-        return self.env['project.git.payload.parser']
+        return self.env["project.git.payload.parser"]
 
     @property
     def header(self):
@@ -62,15 +62,15 @@ class GitContext(object):
 
     @property
     def signature(self):
-        return self.header['signature']
+        return self.header["signature"]
 
     @property
     def has_signature(self):
-        return 'signature' in self.header
+        return "signature" in self.header
 
     @property
     def delivery(self):
-        return self.header['delivery']
+        return self.header["delivery"]
 
     @property
     def raw_payload(self):
@@ -84,15 +84,15 @@ class GitContext(object):
 
     @property
     def action_type(self):
-        return self.header['action_type']
+        return self.header["action_type"]
 
     @property
     def has_action(self):
-        return self.header['action_type']
+        return self.header["action_type"]
 
     @property
     def action(self):
-        return self.header['action']
+        return self.header["action"]
 
     def validate_payload(self, payload):
         payload_digest = hmac_new(self.repository.secret, payload, True)
@@ -109,32 +109,38 @@ class GitContext(object):
 
     def render_task_subject(self, values):
         return self.render(
-            'project_git.task_code_committed_notification_subject', values
+            "project_git.task_code_committed_notification_subject", values
         )
 
     def render_task_body(self, values):
         return self.render(
-            'project_git.task_code_committed_notification_body', values
+            "project_git.task_code_committed_notification_body", values
         )
 
     def render_orphan_subject(self, values):
         return self.render(
-            'project_git.orphan_code_committed_notification_subject', values
+            "project_git.orphan_code_committed_notification_subject", values
         )
 
     def render_orphan_body(self, values):
         return self.render(
-            'project_git.orphan_code_committed_notification_body', values
+            "project_git.orphan_code_committed_notification_body", values
         )
 
 
 class GitController(http.Controller):
-
     def process_request(self, context):
-        repository = context.env["project.git.repository"].sudo().search([
-            ("type", "=", context.type),
-            ("odoo_uuid", "=", context.token),
-        ], limit=1)
+        repository = (
+            context.env["project.git.repository"]
+            .sudo()
+            .search(
+                [
+                    ("type", "=", context.type),
+                    ("odoo_uuid", "=", context.token),
+                ],
+                limit=1,
+            )
+        )
 
         if not repository:
             return context.not_found()
@@ -147,9 +153,11 @@ class GitController(http.Controller):
         return getattr(self, context.action)(context)
 
     def find_repository(self, context):
-        repositories = context.env["project.git.repository"].sudo().search([
-            ("type", "=", context.type)
-        ])
+        repositories = (
+            context.env["project.git.repository"]
+            .sudo()
+            .search([("type", "=", context.type)])
+        )
         for repository in repositories:
             if context.token_match(repository):
                 return repository
@@ -175,12 +183,19 @@ class GitController(http.Controller):
         return "PONG"
 
     def git_delete(self, context):
-        for branch_data in context.payload['braches']:
-            branch = context.env["project.git.branch"].sudo().search([
-                ("name", "=", branch_data["name"]),
-                ("repository_id", "=", branch_data["repository_id"]),
-                ("type", "=", branch_data["type"])
-            ], limit=1)
+        for branch_data in context.payload["braches"]:
+            branch = (
+                context.env["project.git.branch"]
+                .sudo()
+                .search(
+                    [
+                        ("name", "=", branch_data["name"]),
+                        ("repository_id", "=", branch_data["repository_id"]),
+                        ("type", "=", branch_data["type"]),
+                    ],
+                    limit=1,
+                )
+            )
 
             if branch:
                 branch.unlink()
@@ -193,7 +208,7 @@ class GitController(http.Controller):
     def git_push(self, context):
         try:
             GitUser = context.env["project.git.user"].sudo()
-            ResUser = context.env['res.users'].sudo()
+            ResUser = context.env["res.users"].sudo()
 
             # ============================================================
             # UPDATE/CREATE Repository owner
@@ -203,32 +218,58 @@ class GitController(http.Controller):
                 payload = context.payload
             except Exception as ex:
                 import traceback
+
                 _logger.error(
                     "Something went wrong while parsing "
                     "repository web hook payload "
                     "(repository_id='%s', type='%s', delivery='%s'): %s"
-                    "\n stack_trace:%s" % (
-                        context.repository.id, context.type, context.delivery,
-                        str(ex), traceback.format_exc()
+                    "\n stack_trace:%s"
+                    % (
+                        context.repository.id,
+                        context.type,
+                        context.delivery,
+                        str(ex),
+                        traceback.format_exc(),
                     )
                 )
                 return self.reponse_nok()
 
-            repository_data = payload['repository']
+            repository_data = payload["repository"]
 
             repository_owner_data = repository_data.pop("owner")
             if repository_owner_data:
-                if 'email' in repository_owner_data:
+                if "email" in repository_owner_data:
                     repository_owner_user = ResUser.search(
-                        [("email", "=", repository_owner_data.get("email", ''))], limit=1
+                        [
+                            (
+                                "email",
+                                "=",
+                                repository_owner_data.get("email", ""),
+                            )
+                        ],
+                        limit=1,
                     )
-                    repository_owner_data['user_id'] = \
-                        repository_owner_user and repository_owner_user.id or False
+                    repository_owner_data["user_id"] = (
+                        repository_owner_user
+                        and repository_owner_user.id
+                        or False
+                    )
 
-                repository_owner = GitUser.search([
-                    ("username", '=', repository_owner_data.get("username", 'Unknow')),
-                    ("type", "=", repository_owner_data.get('type', False))
-                ], limit=1)
+                repository_owner = GitUser.search(
+                    [
+                        (
+                            "username",
+                            "=",
+                            repository_owner_data.get("username", "Unknow"),
+                        ),
+                        (
+                            "type",
+                            "=",
+                            repository_owner_data.get("type", False),
+                        ),
+                    ],
+                    limit=1,
+                )
 
                 if repository_owner:
                     repository_owner.write(repository_owner_data)
@@ -239,7 +280,7 @@ class GitController(http.Controller):
             # ==========================================================
             # UPDATE/CREATE Repository
             # ----------------------------------------------------------
-            repository_data = context.payload['repository']
+            repository_data = context.payload["repository"]
             repository_data["user_id"] = repository_owner.id
             context.repository.sudo().write(repository_data)
             # ----------------------------------------------------------
@@ -250,18 +291,17 @@ class GitController(http.Controller):
             # ==========================================================
             # UPDATE/CREATE Branch
             # ----------------------------------------------------------
-            for branch_data in context.payload.get('branches', []):
-                self.process_branch(branch_data,
-                                    task_commits,
-                                    orphan_commits,
-                                    context)
+            for branch_data in context.payload.get("branches", []):
+                self.process_branch(
+                    branch_data, task_commits, orphan_commits, context
+                )
 
             # CREATE email notification for every affected task
-            sender = context.payload.get('sender', False)
+            sender = context.payload.get("sender", False)
             if sender:
-                sender = GitUser.search([
-                    ("username", "=", sender["username"])
-                ], limit=1)
+                sender = GitUser.search(
+                    [("username", "=", sender["username"])], limit=1
+                )
 
             if len(task_commits):
                 self.send_task_commits(task_commits, sender, context)
@@ -272,25 +312,30 @@ class GitController(http.Controller):
             return self.reponse_ok()
         except BaseException as ex:
             import traceback
+
             _logger.error(
                 "Something went wrong while processing repository web hook "
                 "(repository_id='%s', type='%s', delivery='%s'): %s"
-                "\n stack_trace:%s" % (
-                    context.repository.id, context.type, context.delivery,
-                    str(ex), traceback.format_exc()
+                "\n stack_trace:%s"
+                % (
+                    context.repository.id,
+                    context.type,
+                    context.delivery,
+                    str(ex),
+                    traceback.format_exc(),
                 )
             )
             return self.reponse_nok()
 
-    def process_branch(self, branch_data, task_commits, orphan_commits,
-                       context):
-
+    def process_branch(
+        self, branch_data, task_commits, orphan_commits, context
+    ):
         def sanitize_key(key):
             key = key.upper()
             pk_len = len(context.repository.project_id.key)
             key = key.replace(" ", "")
-            if key[pk_len] != '-':
-                key = key[:pk_len] + '-' + key[pk_len:]
+            if key[pk_len] != "-":
+                key = key[:pk_len] + "-" + key[pk_len:]
             return key
 
         def find_task_keys(pattern, message):
@@ -303,19 +348,22 @@ class GitController(http.Controller):
         GitCommit = context.env["project.git.commit"].sudo()
         ProjectTask = context.env["project.task"].sudo()
         GitUser = context.env["project.git.user"].sudo()
-        ResUser = context.env['res.users'].sudo()
+        ResUser = context.env["res.users"].sudo()
 
         # Preparing regular expression used to search for task keys
         # inside of commit message
         task_key_pattern = self.compile_task_key_pattern(context)
 
-        commits = branch_data.pop('commits')
+        commits = branch_data.pop("commits")
 
-        branch = GitBranch.search([
-            ("name", '=', branch_data["name"]),
-            ("repository_id", "=", branch_data["repository_id"]),
-            ("type", "=", branch_data.get("type", False))
-        ], limit=1)
+        branch = GitBranch.search(
+            [
+                ("name", "=", branch_data["name"]),
+                ("repository_id", "=", branch_data["repository_id"]),
+                ("type", "=", branch_data.get("type", False)),
+            ],
+            limit=1,
+        )
 
         if branch:
             branch.write(branch_data)
@@ -326,22 +374,27 @@ class GitController(http.Controller):
             task_keys = find_task_keys(
                 task_key_pattern, commit_data.get("message", False)
             )
-            tasks = len(task_keys) and ProjectTask.search([
-                ("key", "in", task_keys)
-            ]) or []
+            tasks = (
+                len(task_keys)
+                and ProjectTask.search([("key", "in", task_keys)])
+                or []
+            )
 
             # ----------------------------------------------------
             # UPDATE/CREATE Commit Author
             # ----------------------------------------------------
-            commit_author_data = commit_data.pop('author')
-            commit_author = GitUser.search([
-                ("email", '=', commit_author_data.get("email", '')),
-                ("type", "=", commit_author_data.get("type", False))
-            ], limit=1)
+            commit_author_data = commit_data.pop("author")
+            commit_author = GitUser.search(
+                [
+                    ("email", "=", commit_author_data.get("email", "")),
+                    ("type", "=", commit_author_data.get("type", False)),
+                ],
+                limit=1,
+            )
 
-            author_user = ResUser.search([
-                ('email', '=', commit_author_data.get("email", ''))
-            ], limit=1)
+            author_user = ResUser.search(
+                [("email", "=", commit_author_data.get("email", ""))], limit=1
+            )
             if author_user:
                 commit_author_data["user_id"] = author_user.id
 
@@ -353,13 +406,15 @@ class GitController(http.Controller):
 
             commit_data["branch_id"] = branch.id
             commit_data["author_id"] = commit_author.id
-            commit_data["task_ids"] = \
-                len(tasks) and [(6, 0, tasks.ids)] or []
+            commit_data["task_ids"] = len(tasks) and [(6, 0, tasks.ids)] or []
 
-            commit = GitCommit.search([
-                ("name", '=', commit_data.get("name", False)),
-                ("type", "=", commit_data.get("type", False))
-            ], limit=1)
+            commit = GitCommit.search(
+                [
+                    ("name", "=", commit_data.get("name", False)),
+                    ("type", "=", commit_data.get("type", False)),
+                ],
+                limit=1,
+            )
 
             if commit:
                 commit.write(commit_data)
@@ -371,9 +426,9 @@ class GitController(http.Controller):
             else:
                 for task in tasks:
                     item = task_commits.get(
-                        task.id, {'task': task, 'commits': []}
+                        task.id, {"task": task, "commits": []}
                     )
-                    item['commits'].append(commit)
+                    item["commits"].append(commit)
                     task_commits[task.id] = item
 
     def send_task_commits(self, task_commits, sender, context):
@@ -387,11 +442,11 @@ class GitController(http.Controller):
         email_from = "%s <%s>" % (sender.name, sender.email)
 
         for item in task_commits.values():
-            task = item['task']
-            commits = item['commits']
+            task = item["task"]
+            commits = item["commits"]
 
-            values['task'] = task
-            values['commits'] = commits
+            values["task"] = task
+            values["commits"] = commits
 
             subject = context.render_task_subject(values)
             body = context.render_task_body(values)
@@ -408,7 +463,7 @@ class GitController(http.Controller):
         values = {
             "context": context,
             "sender": sender,
-            'commits': orphan_commits,
+            "commits": orphan_commits,
         }
 
         author = sender.user_id and sender.user_id.partner_id.id or False

@@ -5,7 +5,7 @@ from odoo import models, fields
 
 
 class TimesheetCategory(models.Model):
-    _inherit = 'project.timesheet.category'
+    _inherit = "project.timesheet.category"
 
     name = fields.Char(scrummer=True)
     description = fields.Html(scrummer=True)
@@ -14,7 +14,7 @@ class TimesheetCategory(models.Model):
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _inherit = "account.analytic.line"
 
     category_id = fields.Many2one(scrummer=True)
     billable = fields.Selection(scrummer=True)

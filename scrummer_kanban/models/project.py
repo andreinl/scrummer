@@ -4,7 +4,7 @@ from odoo import models, fields
 
 
 class Task(models.Model):
-    _inherit = 'project.task'
+    _inherit = "project.task"
 
     project_agile_method = fields.Selection(
         related="project_id.agile_method",

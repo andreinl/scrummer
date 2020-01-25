@@ -5,18 +5,12 @@
     "name": "Scrummer Workflow Transition by Project",
     "summary": "This module extends workflow transitions with projects",
     "category": "Project",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_workflow_transition_by_project",
-        "scrummer",
-    ],
-
-    "data": [
-        "views/scrummer_workflow_security.xml",
-    ],
+    "depends": ["project_workflow_transition_by_project", "scrummer",],
+    "data": ["views/scrummer_workflow_transition_by_project.xml",],
     "images": [],
     "installable": True,
 }

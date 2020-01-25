@@ -24,7 +24,7 @@
                 <div class="icon done"><i class="mdi mdi-check mdi-24px"/></div>
                 <div class="icon warning"><i class="mdi mdi-alert mdi-24px"/></div>
                 <img t-if="widget.record.downloadable" t-attf-src="{{widget.user_image_url}}" class="circle valign image tooltipped"
-                    data-position="bottom" data-delay="50" t-attf-data-tooltip="{{widget.record.create_uid[1]}} @ {{widget.record.create_date}}"/>
+                    data-position="bottom" data-delay="50" t-attf-data-tooltip="{{widget.record.create_uid[1]}} @ {{widget.create_date}}"/>
                 <div class="meta">
                     <div class="name">
 

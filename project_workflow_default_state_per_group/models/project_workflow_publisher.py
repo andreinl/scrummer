@@ -5,13 +5,13 @@ from odoo import models
 
 
 class ProjectWorkflowPublisher(models.AbstractModel):
-    _inherit = 'project.workflow.publisher'
+    _inherit = "project.workflow.publisher"
 
     def _do_publish(self, old, new, project_id=None, switch=False):
 
         if not switch:
             old.default_state_ids.unlink()
-            new.default_state_ids.write({'workflow_id': old.id})
+            new.default_state_ids.write({"workflow_id": old.id})
 
         return super(ProjectWorkflowPublisher, self)._do_publish(
             old, new, project_id=project_id, switch=switch

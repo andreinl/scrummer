@@ -5,21 +5,13 @@
     "name": "Scrummer Git",
     "summary": "Enables you to integrate project_git with Scrummer",
     "category": "Project",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_git",
-        "scrummer"
-    ],
-    "data": [
-        "views/scrummer_git.xml"
-    ],
-
+    "depends": ["project_git", "scrummer"],
+    "data": ["views/scrummer_git.xml"],
     "demo": [],
-    "qweb": [
-        "static/src/xml/scrummer_git.xml",
-    ],
-    "application": False
+    "qweb": ["static/src/xml/scrummer_git.xml",],
+    "application": False,
 }

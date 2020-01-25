@@ -5,7 +5,7 @@ from odoo import models, fields, api, exceptions, _
 
 
 class Sprint(models.Model):
-    _inherit = ['project.agile.scrum.sprint']
+    _inherit = ["project.agile.scrum.sprint"]
     _implements_syncer = True
 
     name = fields.Char(scrummer=True)
@@ -19,28 +19,22 @@ class Sprint(models.Model):
     task_count = fields.Integer(scrummer=True)
     order = fields.Float(scrummer=True)
     active = fields.Boolean(scrummer=True)
-    task_ids = fields.One2many(
-        comodel_name="project.task",
-        scrummer=True
-    )
-    team_id = fields.Many2one(
-        comodel_name='project.agile.team',
-        scrummer=True
-    )
+    task_ids = fields.One2many(comodel_name="project.task", scrummer=True)
+    team_id = fields.Many2one(comodel_name="project.agile.team", scrummer=True)
 
     @api.multi
     def open_in_scrummer(self):
         self.ensure_one()
 
-        if self.state == 'completed':
-            raise exceptions.ValidationError(_(
-                "Only future or active sprint can be opened in Scrummer!"
-            ))
+        if self.state == "completed":
+            raise exceptions.ValidationError(
+                _("Only future or active sprint can be opened in Scrummer!")
+            )
 
-        view_type = 'sprint' if self.state == 'active' else 'backlog'
+        view_type = "sprint" if self.state == "active" else "backlog"
 
         return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': "/scrummer/web#page=board&view=%s" % view_type
+            "type": "ir.actions.act_url",
+            "target": "self",
+            "url": "/scrummer/web#page=board&view=%s" % view_type,
         }

@@ -257,6 +257,13 @@ odoo.define('scrummer.view.kanban_table', function (require) {
     var TaskCard = AbstractCard.extend({
         menuItems: [
             {
+                class: "open-in-project",
+                icon: "mdi-briefcase",
+                text: _t("Open in project"),
+                callback: '_onOpenInProject',
+                sequence: 0,
+            },
+            {
                 class: "assign-to-me",
                 icon: "mdi-account-check",
                 text: _t("Assign To Me"),
@@ -382,6 +389,10 @@ odoo.define('scrummer.view.kanban_table', function (require) {
                 edit: this.task,
             });
             newItemModal.appendTo($("body"));
+        },
+        _onOpenInProject() {
+            var newUrl = "http://" + window.location.host + "/web?#id=" + this.task.id + "&model=project.task&view_type=form";
+            window.location.href = newUrl;
         },
         _onAssignToMeClick() {
             this.task.user_id = data.session.uid;
@@ -767,6 +778,9 @@ odoo.define('scrummer.view.kanban_table', function (require) {
         },
         getColumnFromStageField(stageFieldId) {
             for (let column of this.data.sorted_columns) {
+                if (!column.status) {
+                    continue;
+                }
                 for (let status of column.status) {
                     if (this.data.workflow.states[status.state_id].stage_id === stageFieldId) {
                         return column;

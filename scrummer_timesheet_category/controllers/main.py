@@ -6,12 +6,18 @@ from odoo.addons.scrummer.controllers.main import ScrummerController
 
 
 class TimesheetCategoryScrummerController(ScrummerController):
-    @http.route('/scrummer/session_user', type='json', auth='user')
+    @http.route("/scrummer/session_user", type="json", auth="user")
     def session_user(self):
         user = http.request.env.user
-        result = super(TimesheetCategoryScrummerController, self).session_user()
-        result['default_timesheet_category_id'] = \
-            [user.default_timesheet_category_id.id,
-             user.default_timesheet_category_id.name] \
-                if user.default_timesheet_category_id.id else False
+        result = super(
+            TimesheetCategoryScrummerController, self
+        ).session_user()
+        result["default_timesheet_category_id"] = (
+            [
+                user.default_timesheet_category_id.id,
+                user.default_timesheet_category_id.name,
+            ]
+            if user.default_timesheet_category_id.id
+            else False
+        )
         return result

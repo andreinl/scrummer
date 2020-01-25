@@ -22,6 +22,13 @@ odoo.define('scrummer.view.task', function (require) {
         template: "scrummer.view.task",
         menuItems: [
             {
+                class: "open-in-project",
+                icon: "mdi-briefcase",
+                text: _t("Open in project"),
+                callback: '_onOpenInProject',
+                sequence: 0,
+            },
+            {
                 class: "assign-to-me",
                 icon: "mdi-account-check",
                 text: _t("Assign To Me"),
@@ -192,7 +199,10 @@ odoo.define('scrummer.view.task', function (require) {
                 collapseEffect: "fadeOut"
             });
         },
-
+        _onOpenInProject() {
+            var newUrl = "http://" + window.location.host + "/web?#id=" + this.taskId + "&model=project.task&view_type=form";
+            window.location.href = newUrl;
+        },
         _onAssignToMeClick() {
             this.taskWidget._model.user_id = data.session.uid;
         },
@@ -275,8 +285,13 @@ odoo.define('scrummer.view.task', function (require) {
             this.renderButtons();
         },
         getAllowedTransitions() {
-            return this.workflow.states[this.workflow.stageToState[this.taskStageId]].out_transitions
-                .map(transitionId => this.workflow.transitions[transitionId]);
+            if (this.workflow.states.length > 0 &&
+              this.workflow.stageToState.length > 0 &&
+              this.workflow.stageToState.hasOwnProperty(this.taskStageId)) {
+                return this.workflow.states[this.workflow.stageToState[this.taskStageId]].out_transitions
+                  .map(transitionId => this.workflow.transitions[transitionId]);
+            }
+            return [];
         },
         renderButtons() {
             this.$el.empty();

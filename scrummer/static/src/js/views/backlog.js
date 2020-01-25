@@ -475,6 +475,13 @@ odoo.define('scrummer.view.backlog', function (require) {
         },
         menuItems: [
             {
+                class: "open-in-project",
+                icon: "mdi-briefcase",
+                text: _t("Open in project"),
+                callback: '_onOpenInProject',
+                sequence: 0,
+            },
+            {
                 class: "assign-to-me",
                 icon: "mdi-account-check",
                 image: function () {
@@ -563,6 +570,10 @@ odoo.define('scrummer.view.backlog', function (require) {
                 WidgetClass: TaskWidget,
                 options: {id: this.record.id, isQuickDetailView: true}
             });
+        },
+        _onOpenInProject() {
+            var newUrl = "http://" + window.location.host + "/web?#id=" + this.record.id + "&model=project.task&view_type=form";
+            window.location.href = newUrl;
         },
         _onAssignToMeClick() {
             this.record.user_id = data.session.uid;

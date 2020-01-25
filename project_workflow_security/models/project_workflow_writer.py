@@ -6,7 +6,7 @@ from odoo import models, tools
 
 
 class XmlWorkflowWriter(models.AbstractModel):
-    _inherit = 'project.workflow.xml.writer'
+    _inherit = "project.workflow.xml.writer"
 
     def create_security_groups_element(self, parent, transition):
         """
@@ -16,7 +16,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns a new groups xml element.
         """
         attributes = self.prepare_security_groups_attributes(transition)
-        return etree.SubElement(parent, 'groups', attributes)
+        return etree.SubElement(parent, "groups", attributes)
 
     def prepare_security_groups_attributes(self, transition):
         """
@@ -36,7 +36,7 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns a new transition xml element.
         """
         values = self.prepare_security_group_attributes(group)
-        return etree.SubElement(parent, 'group', values)
+        return etree.SubElement(parent, "group", values)
 
     def prepare_security_group_attributes(self, group):
         """
@@ -45,27 +45,29 @@ class XmlWorkflowWriter(models.AbstractModel):
         :return: Returns dictionary with attribute values.
         """
         values = {
-            'name': group.name,
-            'xml_id': self.get_group_xml_id(group.id)
+            "name": group.name,
+            "xml_id": self.get_group_xml_id(group.id),
         }
 
         return values
 
-    @tools.ormcache('group_id')
+    @tools.ormcache("group_id")
     def get_group_xml_id(self, group_id):
-        group_data = self.env['ir.model.data'].sudo().search([
-            ('model', '=', 'res.groups'),
-            ('res_id', '=', group_id)
-        ])
+        group_data = (
+            self.env["ir.model.data"]
+            .sudo()
+            .search([("model", "=", "res.groups"), ("res_id", "=", group_id)])
+        )
 
         if group_data.exists():
             return "%s.%s" % (group_data.module, group_data.name)
 
-        return 'NO_XML_ID'
+        return "NO_XML_ID"
 
     def create_transition_element(self, parent, transition):
-        transition_element = super(XmlWorkflowWriter, self)\
-            .create_transition_element(parent, transition)
+        transition_element = super(
+            XmlWorkflowWriter, self
+        ).create_transition_element(parent, transition)
 
         security_groups_element = self.create_security_groups_element(
             transition_element, transition

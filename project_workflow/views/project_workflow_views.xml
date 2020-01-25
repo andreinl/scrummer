@@ -344,7 +344,7 @@
                      <field name="dst_id"/>
                      <field name="name"/>
                  </arrow>
-                 <label string="When customizing a workflow, be sure you do not modify an existing node or arrow, but rather add new nodes or arrows. If you absolutely need to modify a node or arrow, you can only change fields that are empty or set to the default value. If you don't do that, your customization will be overwritten at the next update or upgrade to a future version of Odoo."/>
+                 <label string="When customizing a workflow, be sure you do not modify an existing node or arrow, but rather add new nodes or arrows. If you absolutely need to modify a node or arrow, you can only change fields that are empty or set to the default value. If you don't do that, your customization will be overwritten at the next update or upgrade to a future version of Odoo." for=""/>
              </diagram>
          </field>
      </record>

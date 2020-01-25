@@ -60,7 +60,6 @@
     <record id="view_git_commit_kanban" model="ir.ui.view">
         <field name="name">project.git.commit.kanban</field>
         <field name="model">project.git.commit</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban create="0" edit="0">
                 <field name="name"/>
@@ -76,11 +75,11 @@
                     <div class="oe_kanban_card oe_kanban_global_click"  style="background-color: #ececec;">
 
                         <div class="o_dropdown_kanban" style="visibility: visible;">
-                            <a name="icon" class="btn" t-attf-href="#{record.url.raw_value}" target="_blank">
+                            <a name="icon" role="button" class="btn" t-attf-href="#{record.url.raw_value}" target="_blank">
                             </a>
                         </div>
                         <div class="o_kanban_image">
-                                <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox" alt="avatar"/>
                         </div>
                         <div class="oe_kanban_details">
                             <div>
@@ -93,7 +92,7 @@
                                 <span><b><field name="date"/></b></span>
                             </div>
                             <div class="oe_kanban_bottom_right">
-                                <img t-attf-src="#{record.author_avatar.raw_value}" t-attf-title="#{record.author_username.raw_value}" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                <img t-attf-src="#{record.author_avatar.raw_value}" t-attf-title="#{record.author_username.raw_value}" width="24" height="24" class="oe_kanban_avatar pull-right" alt="avatar"/>
                             </div>
                         </div>
                         <div class="oe_clear"></div>

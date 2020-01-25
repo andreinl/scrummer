@@ -11,7 +11,7 @@
                 <span class="caret">▼</span>
                 <input class="id" type="text" t-attf-name="{{widget.field_name}}" hidden="1"/>
                 <input class="name" type="text"/>
-                <label><t t-esc="widget.label"/></label>
+                <label for=""><t t-esc="widget.label"/></label>
                 <ul class="many2one-content dropdown-content"/>
             </div>
         </div>

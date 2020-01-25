@@ -287,7 +287,6 @@ These will be the first features to be removed from scope if the project’s tim
             <field name="name">Sub Task</field>
             <field name="description">A subtask that needs to be done..</field>
             <field name="icon" type="base64" file="project_agile/static/img/type-task.png"/>
-            <field name="is_subtask" eval="True"/>
             <field name="allow_sub_tasks" eval="False"/>
             <field name="allow_story_points" eval="False"/>
             <field name="default_priority_id" ref="project_task_priority_minor"/>
@@ -381,7 +380,6 @@ These will be the first features to be removed from scope if the project’s tim
                 ]]>
              </field>
              <field name="allow_story_points" eval="False"/>
-             <field name="is_subtasl" eval="False"/>
              <field name="allow_sub_tasks" eval="False"/>
              <field name="default_priority_id" ref="project_task_priority_major"/>
              <field name="priority_ids" eval="[

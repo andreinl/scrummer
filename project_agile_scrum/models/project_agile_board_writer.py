@@ -4,13 +4,14 @@ from odoo import models
 
 
 class XmlAgileBoardWriter(models.AbstractModel):
-    _inherit = 'project.agile.board.xml.writer'
+    _inherit = "project.agile.board.xml.writer"
 
     def prepare_board_attributes(self, board):
-        board_attributes = super(XmlAgileBoardWriter, self)\
-            .prepare_board_attributes(board)
+        board_attributes = super(
+            XmlAgileBoardWriter, self
+        ).prepare_board_attributes(board)
         if board.scrum_task_type_ids:
-            board_attributes['scrum_task_type_ids'] = ",".join([
-                x.name for x in board.scrum_task_type_ids
-            ])
+            board_attributes["scrum_task_type_ids"] = ",".join(
+                [x.name for x in board.scrum_task_type_ids]
+            )
         return board_attributes

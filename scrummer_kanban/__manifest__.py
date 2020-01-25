@@ -5,22 +5,13 @@
     "name": "Scrummer Kanban",
     "summary": "Manage your projects by using agile kanban methodology",
     "category": "Project",
-    "version": "11.0.0.1.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Modoolar",
     "website": "https://www.modoolar.com/",
-    "depends": [
-        "project_agile_kanban",
-        "scrummer",
-    ],
-
-    "data": [
-        "views/scrummer_kanban.xml",
-    ],
-
+    "depends": ["project_agile_kanban", "scrummer",],
+    "data": ["views/scrummer_kanban.xml",],
     "demo": [],
-    "qweb": [
-        "static/src/xml/*.xml",
-    ],
+    "qweb": ["static/src/xml/*.xml",],
     "application": True,
 }

@@ -5,7 +5,7 @@ from odoo import models
 
 
 class ProjectWorkflowPublisher(models.AbstractModel):
-    _inherit = 'project.workflow.publisher'
+    _inherit = "project.workflow.publisher"
 
     def _do_publish(self, old, new, project_id=None, switch=False):
 
@@ -16,7 +16,7 @@ class ProjectWorkflowPublisher(models.AbstractModel):
             for wkf_state in new.state_ids:
                 wkf_states[wkf_state.stage_id.id] = wkf_state
 
-            for board in self.env['project.agile.board'].sudo().search([]):
+            for board in self.env["project.agile.board"].sudo().search([]):
                 if old.id not in board.workflow_ids.ids:
                     continue
 
@@ -28,16 +28,18 @@ class ProjectWorkflowPublisher(models.AbstractModel):
                 )
 
         elif project_id:
-            project_id.write({'board_ids': [(5,)]})
+            project_id.write({"board_ids": [(5,)]})
 
             if project_id.agile_enabled:
-                default_board = self.env['project.agile.board'].search([
-                    ('type', '=', project_id.agile_method),
-                    ('is_default', '=', True)
-                ])
+                default_board = self.env["project.agile.board"].search(
+                    [
+                        ("type", "=", project_id.agile_method),
+                        ("is_default", "=", True),
+                    ]
+                )
 
                 if default_board.exists():
-                    project_id.write({'board_ids': [(4, default_board.id,)]})
+                    project_id.write({"board_ids": [(4, default_board.id,)]})
 
         return super(ProjectWorkflowPublisher, self)._do_publish(
             old, new, project_id, switch
@@ -48,14 +50,15 @@ class ProjectWorkflowPublisher(models.AbstractModel):
         to_delete = []
 
         for status in board.status_ids.filtered(
-                lambda s: s.workflow_id == old
+            lambda s: s.workflow_id == old
         ):
             if status.stage_id.id not in wkf_states:
                 to_delete.append(status.id)
             else:
                 wkf_state = wkf_states[status.stage_id.id]
-                status.write({'state_id': wkf_state.id})
+                status.write({"state_id": wkf_state.id})
 
         if to_delete:
-            self.env['project.agile.board.column.status']\
-                .browse(to_delete).unlink()
+            self.env["project.agile.board.column.status"].browse(
+                to_delete
+            ).unlink()

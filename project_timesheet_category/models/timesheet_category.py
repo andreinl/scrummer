@@ -5,31 +5,19 @@ from odoo import models, fields, api
 
 
 class TimesheetCategory(models.Model):
-    _name = 'project.timesheet.category'
-    _order = 'name'
+    _name = "project.timesheet.category"
+    _description = "Project Timesheet Category"
+    _order = "name"
 
     name = fields.Char(string="Name", required=True)
-    code = fields.Char(
-        string="Code",
-        default='N/A',
-        required=True
-    )
+    code = fields.Char(string="Code", default="N/A", required=True)
 
     billable = fields.Selection(
-        selection=[
-            ('yes', 'Yes'),
-            ('no', 'No'),
-        ],
-        string='Billable',
+        selection=[("yes", "Yes"), ("no", "No"),],
+        string="Billable",
         required=True,
-        default='yes',
+        default="yes",
     )
 
-    description = fields.Html(
-        string="Description",
-        required=False,
-    )
-    active = fields.Boolean(
-        string='Active',
-        default=True,
-    )
+    description = fields.Html(string="Description", required=False,)
+    active = fields.Boolean(string="Active", default=True,)

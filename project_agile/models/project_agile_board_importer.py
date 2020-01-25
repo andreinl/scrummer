@@ -4,8 +4,8 @@ from odoo import models
 
 
 class AgileBoardImporter(models.AbstractModel):
-    _name = 'project.agile.board.importer'
-    _description = 'Agile Board Importer'
+    _name = "project.agile.board.importer"
+    _description = "Agile Board Importer"
 
     def run(self, reader, stream):
         """
@@ -24,18 +24,22 @@ class AgileBoardImporter(models.AbstractModel):
         :return: Returns instance of the imported project workflow.
         """
 
-        workflow = self.env['project.workflow'].search([
-            ('name', '=', board['workflow'])
-        ])
+        workflow = self.env["project.workflow"].search(
+            [("name", "=", board["workflow"])]
+        )
         wkf_states = dict([(s.name, s) for s in workflow.state_ids])
 
-        board_data = self.prepare_board(board, workflow, [
-            (0, 0, self.prepare_column(workflow, wkf_states, column))
-            for column in board['columns']
-        ])
+        board_data = self.prepare_board(
+            board,
+            workflow,
+            [
+                (0, 0, self.prepare_column(workflow, wkf_states, column))
+                for column in board["columns"]
+            ],
+        )
 
-        is_default = board_data.pop('is_default', False)
-        the_board = self.env['project.agile.board'].create(board_data)
+        is_default = board_data.pop("is_default", False)
+        the_board = self.env["project.agile.board"].create(board_data)
 
         if is_default:
             the_board.declare_default()
@@ -51,11 +55,11 @@ class AgileBoardImporter(models.AbstractModel):
         within odoo database.
         """
         return {
-            'name': board['name'],
-            'description': board['description'],
-            'type': board['type'],
-            'is_default': board['is_default'],
-            'column_ids': column_ids,
+            "name": board["name"],
+            "description": board["description"],
+            "type": board["type"],
+            "is_default": board["is_default"],
+            "column_ids": column_ids,
         }
 
     def prepare_column(self, workflow, wkf_states, column):
@@ -64,13 +68,13 @@ class AgileBoardImporter(models.AbstractModel):
         :return: Returns prepared ``project.workflow.state`` values.
         """
         return {
-            'name': column['name'],
-            'order': column['order'],
-            'workflow_id': workflow.id,
-            'status_ids': [
+            "name": column["name"],
+            "order": column["order"],
+            "workflow_id": workflow.id,
+            "status_ids": [
                 (0, 0, self.prepare_status(workflow, wkf_states, status))
-                for status in column['statuses']
-            ]
+                for status in column["statuses"]
+            ],
         }
 
     def prepare_status(self, workflow, wkf_states, status):
@@ -79,7 +83,7 @@ class AgileBoardImporter(models.AbstractModel):
         :return: Returns prepared ``project.workflow.transition`` values.
         """
         return {
-            'workflow_id': workflow.id,
-            'state_id': wkf_states[status['wkf_state']].id,
-            'order': status['order'],
+            "workflow_id": workflow.id,
+            "state_id": wkf_states[status["wkf_state"]].id,
+            "order": status["order"],
         }

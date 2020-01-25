@@ -4,15 +4,16 @@ from odoo import models, exceptions, _
 
 
 class GitPayloadParser(models.AbstractModel):
-    _name = 'project.git.payload.parser'
+    _name = "project.git.payload.parser"
+    _description = "Project Git Payload Parser"
 
     def parse_header(self, context):
         parse_method_name = "parse_%s_header" % context.type
 
         if not hasattr(self, parse_method_name):
             raise exceptions.ValidationError(
-                _("Unable to find header parsing method for '%s'") %
-                context.type
+                _("Unable to find header parsing method for '%s'")
+                % context.type
             )
 
         return getattr(self, parse_method_name)(
@@ -24,7 +25,7 @@ class GitPayloadParser(models.AbstractModel):
 
         if not hasattr(self, parse_method_name):
             raise exceptions.ValidationError(
-                _("Unable to find parsing method for '%s'") % (context.type, )
+                _("Unable to find parsing method for '%s'") % (context.type,)
             )
 
         return getattr(self, parse_method_name)(context)

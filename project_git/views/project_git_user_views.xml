@@ -48,7 +48,7 @@
                                             <div class="oe_kanban_global_click" style="background-color: #ececec;">
                                                 <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                                 <div class="o_kanban_image">
-                                                    <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                                    <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox" alt="avatar"/>
                                                 </div>
                                                 <div class="oe_kanban_details">
                                                     <div>
@@ -91,7 +91,6 @@
     <record id="view_git_user_kanban" model="ir.ui.view">
         <field name="name">project.git.user.kanban</field>
         <field name="model">project.git.user</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban create="0" edit="0">
                 <field name="name"/>
@@ -104,12 +103,12 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_res_partner_kanban" style="background-color: #ececec;">
                             <div class="o_dropdown_kanban" style="visibility: visible;">
-                                <a name="icon" class="btn" t-attf-href="#{record.url.raw_value}" target="_blank">
+                                <a name="icon" role="button" class="btn" t-attf-href="#{record.url.raw_value}" target="_blank">
                                 </a>
                             </div>
                             <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                             <div class="o_kanban_image">
-                                <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                <img t-attf-src="#{record.avatar.raw_value}" class="o_kanban_image oe_kanban_avatar_smallbox" alt="avatar"/>
                             </div>
                             <div class="oe_kanban_details">
                                 <div>

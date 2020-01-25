@@ -9,8 +9,8 @@ def post_init_hook(cr, registry):
 
     env = api.Environment(cr, SUPERUSER_ID, {})
 
-    board_pathname = os.path.join('project_agile_scrum', 'import', 'board.xml')
+    board_pathname = os.path.join("project_agile_scrum", "import", "board.xml")
     with misc.file_open(board_pathname) as stream:
-        importer = env['project.agile.board.importer']
-        reader = env['project.agile.board.xml.reader']
+        importer = env["project.agile.board.importer"]
+        reader = env["project.agile.board.xml.reader"]
         importer.run(reader, stream)
