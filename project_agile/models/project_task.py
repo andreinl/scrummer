@@ -163,6 +163,14 @@ class TaskType(models.Model):
         string="Sub Types",
     )
 
+    parent_type_ids = fields.Many2many(
+        comodel_name="project.task.type2",
+        relation="project_task_type2_sub_types_rel",
+        column1="sub_type_id",
+        column2="type_id",
+        string="Parent Types",
+    )
+
     task_ids = fields.One2many(
         comodel_name="project.task",
         inverse_name="type_id",
@@ -390,6 +398,8 @@ class Task(models.Model):
         comodel_name="project.agile.team", string="Committed team",
     )
 
+    parent_id = fields.Many2one('project.task')
+
     type_ids = fields.Many2many(
         comodel_name="project.task.type2",
         related="type_id.type_ids",
@@ -435,6 +445,19 @@ class Task(models.Model):
     )
 
     activity_date_deadline = fields.Date(groups="")
+
+    @api.multi
+    @api.onchange("parent_id")
+    def _onchange_parent_id(self):
+        # Convert to sub-task/story when actually task/story and parent is task/story
+        # TODO use wizard to ask the user which sub-task to be converted
+        # Take the first sub_type in list
+        if self.parent_id and not self.parent_id.is_epic and self.parent_id.allow_sub_tasks and \
+                self.parent_id.type_id.type_ids and self.type_id not in self.parent_id.type_id.type_ids:
+            # force change type_id with first sub_tasks type_id
+            self.type_id = self.parent_id.type_id.type_ids[0]
+
+        return super()._onchange_parent_id()  # pragma: no cover
 
     @api.multi
     @api.depends("type_id")
@@ -591,6 +614,26 @@ class Task(models.Model):
             new._write({"stage_id": new.parent_id.stage_id.id})
 
         return new
+
+    @api.multi
+    def write(self, vals):
+        result = super(Task, self).write(vals)
+        if "type_id" in vals.keys():
+            # Convert children type_id
+            # Convert to sub-task/story when actually task/story and parent is task/story
+            # Convert to task/story when parent become epic
+            # TODO use wizard to ask the user which sub-task to be converted
+            # Take the first sub_type in list
+            if self.allow_sub_tasks and self.type_id.type_ids:
+                if self.is_epic:
+                    for child_id in self.child_ids:
+                        if not child_id.type_id.allow_sub_tasks and child_id.type_id.parent_type_ids:
+                            child_id.type_id = child_id.type_id.parent_type_ids[0]
+                else:
+                    for child_id in self.child_ids:
+                        if child_id.type_id not in self.type_id.type_ids:
+                            child_id.type_id = self.type_id.type_ids[0]
+        return result
 
     @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):
