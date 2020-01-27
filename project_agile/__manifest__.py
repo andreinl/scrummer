@@ -33,6 +33,7 @@
         "wizards/add_subtask_wizard.xml",
         "wizards/add_task_link_wizard.xml",
         "wizards/convert_project_task_type_wizard.xml",
+        "wizards/convert_task_type_wizard.xml",
         "wizards/stage_change_confirmation_wizard.xml",
         # views
         "views/project_project_views.xml",

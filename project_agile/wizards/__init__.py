@@ -9,3 +9,4 @@ from . import add_subtask_wizard
 from . import add_task_link_wizard
 from . import stage_change_confirmation_wizard
 from . import convert_project_task_type_wizard
+from . import convert_task_type_wizard
