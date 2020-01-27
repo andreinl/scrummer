@@ -35,6 +35,7 @@
                 <group>
                     <field name="type_ids" widget="many2many_tags"/>
                     <field name="type_id" domain="[('id', 'not in', type_ids)]"/>
+                    <field name="convert_undefined_stage"/>
                 </group>
                 <footer>
                     <button string="Convert" name="convert_project_task_type" type="object" class="btn-primary"/>
