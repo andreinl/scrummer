@@ -133,26 +133,28 @@ class Task(models.Model):
 
     @api.model
     def _read_workflow_stage_ids(self, stages, domain, order):
-        if "default_project_id" not in self.env.context:
-            return self._read_group_stage_ids(stages, domain, order)
-
-        # TODO: Fix this, it should browse as above user
-        project = self.env["project.project"].browse(
-            self.env.context["default_project_id"]
-        )
-
-        if (
-            not project.allow_workflow
-            or not project.workflow_id
-            or not project.workflow_id.state_ids
-        ):
-            return self._read_group_stage_ids(stages, domain, order)
-
-        sorted_state_ids = project.workflow_id.state_ids.sorted(
-            key=lambda s: s.kanban_sequence
-        )
-        stage_ids = [x.stage_id.id for x in sorted_state_ids]
-        return stages.browse(stage_ids)
+        # if "default_project_id" not in self.env.context:
+        #     return self._read_group_stage_ids(stages, domain, order)
+        #
+        # # TODO: Fix this, it should browse as above user
+        # project = self.env["project.project"].browse(
+        #     self.env.context["default_project_id"]
+        # )
+        #
+        # if (
+        #     not project.allow_workflow
+        #     or not project.workflow_id
+        #     or not project.workflow_id.state_ids
+        # ):
+        #     return self._read_group_stage_ids(stages, domain, order)
+        #
+        # sorted_state_ids = project.workflow_id.state_ids.sorted(
+        #     key=lambda s: s.kanban_sequence
+        # )
+        # stage_ids = [x.stage_id.id for x in sorted_state_ids]
+        # return stages.browse(stage_ids)
+        # TODO check why need to sort by kanban_sequence
+        return self._read_group_stage_ids(stages, domain, order)
 
     @api.multi
     @api.depends(
