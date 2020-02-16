@@ -261,6 +261,10 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
 
+            <button name="action_subtask" position="attributes">
+                 <attribute name="attrs">{'invisible' : [('subtask_count', '=', 0)]}</attribute>
+             </button>
+
             <xpath expr="//header/field[@name='stage_id']" position="before">
                  <button name="%(launch_task_link_wizard)d"
                          string="Add new link"

@@ -27,6 +27,14 @@ class ProjectProject(models.Model):
             else:
                 rec.key = ""
 
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        # clear the key before copying the project
+        default["key"] = self.generate_project_key(default["name"])
+        project = super(ProjectProject, self).copy(default)
+        return project
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
