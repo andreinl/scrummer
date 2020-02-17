@@ -201,7 +201,8 @@ odoo.define('scrummer.view.task', function (require) {
         },
         _onOpenInProject() {
             var newUrl = "http://" + window.location.host + "/web?#id=" + this.taskId + "&model=project.task&view_type=form";
-            window.location.href = newUrl;
+            // window.location.href = newUrl;
+            window.open(newUrl, '_blank').focus();
         },
         _onAssignToMeClick() {
             this.taskWidget._model.user_id = data.session.uid;

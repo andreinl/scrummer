@@ -392,7 +392,8 @@ odoo.define('scrummer.view.kanban_table', function (require) {
         },
         _onOpenInProject() {
             var newUrl = "http://" + window.location.host + "/web?#id=" + this.task.id + "&model=project.task&view_type=form";
-            window.location.href = newUrl;
+            // window.location.href = newUrl;
+            window.open(newUrl, '_blank').focus();
         },
         _onAssignToMeClick() {
             this.task.user_id = data.session.uid;
