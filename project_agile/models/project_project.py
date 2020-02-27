@@ -50,10 +50,10 @@ class ProjectType(models.Model):
 
 class Project(models.Model):
     _name = "project.project"
-    _inherit = ["project.project", "project.agile.mixin.id_search"]
+    _inherit = ["project.project", "project.agile.mixin.id_search", ]
 
     @api.model
-    def _get_default_type_id(self,):
+    def _get_default_type_id(self, ):
         return self.env.ref_id("project_agile.project_type_software")
 
     @api.model
@@ -92,6 +92,7 @@ class Project(models.Model):
     workflow_id = fields.Many2one(
         comodel_name="project.workflow",
         default=lambda s: s._get_default_workflow_id(),
+        track_visibility='onchange'
     )
 
     default_task_type_id = fields.Many2one(
@@ -104,9 +105,10 @@ class Project(models.Model):
     agile_enabled = fields.Boolean(
         string="Use Agile",
         help="If checked project will be enabled for agile management",
+        track_visibility='onchange'
     )
 
-    agile_method = fields.Selection(selection=[], string="Agile Method",)
+    agile_method = fields.Selection(selection=[], string="Agile Method", )
 
     board_ids = fields.Many2many(
         comodel_name="project.agile.board",
@@ -114,6 +116,7 @@ class Project(models.Model):
         column1="project_id",
         column2="board_id",
         string="Boards",
+        track_visibility='onchange'
     )
 
     boards_count = fields.Integer(
@@ -151,7 +154,7 @@ class Project(models.Model):
         "Image",
         attachment=True,
         help="This field holds the image used as image for the project, "
-        "limited to 1024x1024px.",
+             "limited to 1024x1024px.",
     )
 
     image_medium = fields.Binary(
@@ -161,9 +164,9 @@ class Project(models.Model):
         store=True,
         attachment=True,
         help="Medium-sized image of the project. It is automatically "
-        "resized as a 128x128px image, with aspect ratio preserved,"
-        "only when the image exceeds one of those sizes. "
-        "Use this field in form views or some kanban views.",
+             "resized as a 128x128px image, with aspect ratio preserved,"
+             "only when the image exceeds one of those sizes. "
+             "Use this field in form views or some kanban views.",
     )
 
     image_small = fields.Binary(
@@ -209,7 +212,7 @@ class Project(models.Model):
 
             if record.agile_enabled:
                 for task in self.env["project.task"].search(
-                    [("project_id", "=", record.id)]
+                        [("project_id", "=", record.id)]
                 ):
                     if task.wkf_state_type:
                         o[task.wkf_state_type] += task.story_points or 0
@@ -236,8 +239,8 @@ class Project(models.Model):
     def _onchange_type(self):
         if self.type_id:
             if (
-                self.env.context.get("apply_stages", False)
-                and self.type_id.stage_ids
+                    self.env.context.get("apply_stages", False)
+                    and self.type_id.stage_ids
             ):
                 self.type_ids = [x.id for x in self.type_id.stage_ids]
 

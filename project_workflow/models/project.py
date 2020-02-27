@@ -101,7 +101,7 @@ class Task(models.Model):
         related="project_id.allow_workflow", readonly=True,
     )
 
-    stage_id = fields.Many2one(group_expand="_read_workflow_stage_ids")
+    stage_id = fields.Many2one(group_expand="_read_workflow_stage_ids", track_visibility='onchange')
 
     # This field is here just so we can display stage information
     # somewhere else on the task form view and to keep compatibility
@@ -111,13 +111,14 @@ class Task(models.Model):
         related="stage_id",
         string="Workflow Stage",
         readonly=True,
-        track_visibility="never",
+        track_visibility="onchange",
     )
 
     workflow_id = fields.Many2one(
         comodel_name="project.workflow",
         related="project_id.workflow_id",
         readonly=True,
+        track_visibility='onchange',
     )
 
     wkf_state_id = fields.Many2one(
@@ -125,7 +126,11 @@ class Task(models.Model):
         string="Workflow State",
         compute="_compute_workflow_state",
         store=True,
+        track_visibility='onchange',
     )
+
+    wkf_label = fields.Char(compute='_compute_wkf_label', string='Workflow Label', readonly=True,
+                            track_visibility='onchange')
 
     wkf_state_type = fields.Selection(
         related="wkf_state_id.type", string="Wkf State Type"
@@ -183,6 +188,17 @@ class Task(models.Model):
                 )
             else:
                 task.wkf_state_id = False
+
+    @api.depends('wkf_state_id')
+    def _compute_wkf_label(self):
+        for task in self:
+            task.wkf_label = task.wkf_stage_id.display_name
+            # if task.kanban_state == 'normal':
+            #     task.kanban_state_label = task.legend_normal
+            # elif task.kanban_state == 'blocked':
+            #     task.kanban_state_label = task.legend_blocked
+            # else:
+            #     task.kanban_state_label = task.legend_done
 
     @api.cr_uid_context
     def _get_default_stage_id(self):

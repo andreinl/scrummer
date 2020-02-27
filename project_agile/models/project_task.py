@@ -14,20 +14,20 @@ class ProjectTaskLinkRelation(models.Model):
     _name = "project.task.link.relation"
     _description = "Project Task Link Relation Type"
 
-    name = fields.Char(string="Name", required=True,)
+    name = fields.Char(string="Name", required=True, )
 
-    inverse_name = fields.Char(string="Reverse Name", required=True,)
+    inverse_name = fields.Char(string="Reverse Name", required=True, )
 
-    sequence = fields.Integer(string="Order", required=True,)
+    sequence = fields.Integer(string="Order", required=True, )
 
 
 class ProjectTaskLink(models.Model):
     _name = "project.task.link"
     _description = "Project Task Link"
 
-    name = fields.Char(string="Name", compute="_compute_display_name",)
+    name = fields.Char(string="Name", compute="_compute_display_name", )
 
-    comment = fields.Char(string="Comment",)
+    comment = fields.Char(string="Comment", )
 
     relation_id = fields.Many2one(
         comodel_name="project.task.link.relation",
@@ -153,7 +153,7 @@ class TaskType(models.Model):
         string="Allow Story Points", default=True,
     )
 
-    allow_sub_tasks = fields.Boolean(string="Allow Sub-Items", default=False,)
+    allow_sub_tasks = fields.Boolean(string="Allow Sub-Items", default=False, )
 
     type_ids = fields.Many2many(
         comodel_name="project.task.type2",
@@ -177,7 +177,7 @@ class TaskType(models.Model):
         string="Related Tasks",
     )
 
-    portal_visible = fields.Boolean(string="Visible on Portal", default=True,)
+    portal_visible = fields.Boolean(string="Visible on Portal", default=True, )
 
     is_default_type = fields.Boolean(string="Is Default Type", default=False)
 
@@ -221,9 +221,9 @@ class TaskType(models.Model):
                         "id",
                         "in",
                         self.env["project.project"]
-                        .browse(project_ids[0][2])
-                        .mapped("type_id.task_type_ids")
-                        .fetch_all(),
+                            .browse(project_ids[0][2])
+                            .mapped("type_id.task_type_ids")
+                            .fetch_all(),
                     ]
                 )
 
@@ -284,8 +284,8 @@ class TaskPriority(models.Model):
     @api.multi
     def write(self, values):
         if (
-            values.get("is_default_priority", False)
-            and values["is_default_priority"]
+                values.get("is_default_priority", False)
+                and values["is_default_priority"]
         ):
             default_task_priority = self.search(
                 [("is_default_priority", "=", True)]
@@ -388,15 +388,15 @@ class Task(models.Model):
         string="Assigned to Me", compute="_compute_assigned_to_me"
     )
 
-    user_id = fields.Many2one(comodel_name="res.users", default=False,)
+    user_id = fields.Many2one(comodel_name="res.users", default=False, )
 
     create_uid = fields.Many2one(
         comodel_name="res.users", string="Reported By", readonly=True,
     )
 
-    create_date = fields.Datetime(string="Created", readonly=True,)
+    create_date = fields.Datetime(string="Created", readonly=True, )
 
-    write_date = fields.Datetime(string="Updated", readonly=True,)
+    write_date = fields.Datetime(string="Updated", readonly=True, )
 
     team_id = fields.Many2one(
         comodel_name="project.agile.team", string="Committed team",
@@ -443,6 +443,7 @@ class Task(models.Model):
         compute="_compute_links",
         string="Links",
         syncer={"inverse_names": ["task_left_id", "task_right_id"]},
+        track_visibility='onchange',
     )
 
     link_count = fields.Integer(
@@ -561,7 +562,7 @@ class Task(models.Model):
         if self.project_id:
             task_type_id = self.project_id.type_id.default_task_type_id.id
             if default_type_id and self.project_id.type_id.has_task_type(
-                default_type_id
+                    default_type_id
             ):
                 task_type_id = default_type_id
 
@@ -603,8 +604,8 @@ class Task(models.Model):
                 if "portal_visible" not in vals:
                     vals["portal_visible"] = (
                         self.env["project.task.type2"]
-                        .browse(vals["type_id"])
-                        .portal_visible
+                            .browse(vals["type_id"])
+                            .portal_visible
                     )
 
                 if not vals.get("priority_id", False) and vals.get("type_id"):
@@ -732,14 +733,14 @@ class Task(models.Model):
     @api.model
     def _set_default_task_priority_id(self):
         for res in self.with_context(active_test=False).search(
-            [("priority_id", "=", False)]
+                [("priority_id", "=", False)]
         ):
             res.priority_id = res.type_id.default_priority_id or False
 
     @api.model
     def _set_default_task_type_id(self):
         for task in self.with_context(active_test=False).search(
-            [("type_id", "=", False)]
+                [("type_id", "=", False)]
         ):
             dtt = task.project_id.type_id.default_task_type_id
             task.type_id = dtt and dtt.id or False
@@ -752,7 +753,7 @@ class PortalTask(models.Model):
         string="Visible on Portal",
         default=False,
         help="This field enables you to override settings from task type"
-        " and display this task on portal",
+             " and display this task on portal",
     )
 
     @api.model
@@ -820,4 +821,4 @@ class Timesheet(models.Model):
         if not self.portal_approved:
             return
 
-        self.sudo().write(dict(portal_approved=False,))
+        self.sudo().write(dict(portal_approved=False, ))
