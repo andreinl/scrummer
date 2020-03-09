@@ -267,7 +267,8 @@ odoo.define('scrummer.view.backlog', function (require) {
                 }
                 this.taskWidgetItemMap.has(task.id) || this.taskWidgetItemMap.set(task.id, taskWidget);
                 highlight && taskWidget._is_added_to_DOM.then(() => {
-                    $("#backlog-view").scrollToElement(taskWidget.$el);
+                    // TODO enable scroll when fix the problems
+                    // $("#backlog-view").scrollToElement(taskWidget.$el);
                     taskWidget.$el.highlight();
                 });
                 if (syncerMeta) {

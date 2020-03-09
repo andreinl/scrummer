@@ -166,7 +166,8 @@ odoo.define('scrummer.view.task', function (require) {
         },
         scrollAndHighlight(widget) {
             widget._is_added_to_DOM.then(() => {
-                $("#middle-content").scrollToElement(widget.$el);
+                // TODO enable scroll when fix the problems
+                // $("#middle-content").scrollToElement(widget.$el);
                 widget.$el.highlight();
             })
         },

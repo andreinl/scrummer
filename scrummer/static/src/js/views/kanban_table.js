@@ -905,7 +905,8 @@ odoo.define('scrummer.view.kanban_table', function (require) {
 
                                 if (syncerMeta.indirect === false) {
                                     cardWidget._is_added_to_DOM.then(() => {
-                                        node.scrollToElement(cardWidget.$el);
+                                        // TODO enable scroll when fix the problems
+                                        // node.scrollToElement(cardWidget.$el);
                                         highlight && cardWidget.$el.highlight();
                                     });
                                 }

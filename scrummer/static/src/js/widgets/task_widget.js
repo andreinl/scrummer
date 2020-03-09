@@ -411,7 +411,8 @@ odoo.define('scrummer.widget.task', function (require) {
         },
         highlightNewWidget(newWidget) {
             newWidget._is_added_to_DOM.then(() => {
-                this.$el.parent().scrollToElement(newWidget.$el);
+                // TODO enable scroll when fix the problems
+                // this.$el.parent().scrollToElement(newWidget.$el);
                 newWidget.$el.highlight();
             });
         },
