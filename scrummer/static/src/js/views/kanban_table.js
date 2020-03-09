@@ -563,6 +563,14 @@ odoo.define('scrummer.view.kanban_table', function (require) {
                     return status.column_id == col.id;
                 });
 
+                if (state === undefined) {
+                    console.error("State is undefined. CHeck status state_id and all states");
+                    console.debug(status_id);
+                    console.debug(this.data.workflow.states);
+                    console.debug(this.data);
+                    continue;
+                }
+
                 state.global_in && this.data.workflow.global_states.in.push(state);
                 state.global_out && this.data.workflow.global_states.out.push(state);
 
