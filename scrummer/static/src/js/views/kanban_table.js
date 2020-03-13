@@ -858,6 +858,7 @@ odoo.define('scrummer.view.kanban_table', function (require) {
                 stageId: newStageId,
                 stageName: state.name,
                 userName: cardWidget.record.user_id ? cardWidget.record.user_id[1] : _t("Unassigned"),
+                userId: cardWidget.record.user_id,
                 afterHook: (confirmation, form, result) => {
                     confirmedCallback(result);
                 }
