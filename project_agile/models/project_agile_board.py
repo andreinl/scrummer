@@ -309,7 +309,7 @@ class ColumnStatus(models.Model):
         comodel_name="project.workflow.state",
         string="Name",
         oldname="status_id",
-        required=True,
+        required=False
     )
 
     stage_id = fields.Many2one(
